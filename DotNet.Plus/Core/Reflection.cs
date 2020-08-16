@@ -29,8 +29,7 @@ namespace DotNet.Plus.Core
         }
 
 
-
-        public static TField GetField<TField>(this object instance, string fieldName, BindingFlags bindingFlags) =>
+        public static TField GetField<TField>(this object instance, string fieldName, BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance) =>
             GetField<TField>(instance?.GetType() ?? throw new ArgumentNullException(nameof(instance)), instance, fieldName, bindingFlags);
 
         public static TField GetField<TField>(this Type objectType, object instance, string fieldName, BindingFlags bindingFlags)
