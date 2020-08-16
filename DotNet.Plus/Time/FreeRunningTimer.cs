@@ -5,8 +5,8 @@ namespace DotNet.Plus.Time
 {
     public static class FreeRunningTimer
     {
-        private static readonly Stopwatch _stopwatch = Stopwatch.StartNew();
+        private static readonly Stopwatch Stopwatch = Stopwatch.StartNew();
 
-        public static TimeSpan ElapsedTime => _stopwatch.Elapsed;
+        public static TimeSpan ElapsedTime => Stopwatch.Elapsed;
     }
 }

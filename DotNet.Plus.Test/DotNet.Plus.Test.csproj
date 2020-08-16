@@ -18,8 +18,4 @@
     <ProjectReference Include="..\DotNet.Plus\DotNet.Plus.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Time\" />
-  </ItemGroup>
-
 </Project>
