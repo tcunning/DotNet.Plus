@@ -27,10 +27,16 @@
 
   <!-- For Nuget Builds: Deterministic Builds
        See https://github.com/clairernovotny/DeterministicBuilds 
+  -->
   <PropertyGroup Condition="'$(APPVEYOR)' == 'true'">
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    <Version>$(APPVEYOR_BUILD_VERSION)</Version>
   </PropertyGroup>
-  -->
+
+  <PropertyGroup Condition="'$(APPVEYOR)' != 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    <Version>1.0.0</Version>
+  </PropertyGroup>
 
   <ItemGroup>
     <None Include="..\..\License.txt">
