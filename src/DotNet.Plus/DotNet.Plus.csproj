@@ -23,7 +23,7 @@
     <!-- For SourceLink: Embed source files that are not tracked by the source control manager in the PDB
     -->
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <PackageId>DotNet.Plus.Portable.Common</PackageId>
+    <PackageId>Tod.DotNet.Plus</PackageId>
   </PropertyGroup>
 
   <!-- For Nuget Builds: Deterministic Builds
