@@ -4,7 +4,7 @@
   - macos
 
   before_build:
-  - nuget restore
+  - dotnet restore src
 
 build_script:
 - ps: >-
