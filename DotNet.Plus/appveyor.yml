@@ -3,11 +3,9 @@
   - Ubuntu
   - macos
 
-  before_build:
-  - dotnet restore src
-
 build_script:
 - ps: >-
+    dotnet restore src
     dotnet build src --configuration Release
     dotnet test src --configuration Release --no-build --no-restore
 
