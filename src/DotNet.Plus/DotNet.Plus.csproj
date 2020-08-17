@@ -12,6 +12,24 @@
     <Copyright>2020 by Tod Cunningham</Copyright>
     <PackageLicenseFile>License.txt</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/tcunning/DotNet.Plus</PackageProjectUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+
+    <!-- For SourceLink: Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element)
+         See https://github.com/dotnet/sourcelink/blob/master/README.md
+    -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+ 
+    <!-- For SourceLink: Embed source files that are not tracked by the source control manager in the PDB
+    -->
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+  </PropertyGroup>
+
+  <!-- For Nuget Builds: Deterministic Builds
+       See https://github.com/clairernovotny/DeterministicBuilds 
+  -->
+  <PropertyGroup Condition="'$(APPVEYOR)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,6 +37,10 @@
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
   </ItemGroup>
 
 </Project>
