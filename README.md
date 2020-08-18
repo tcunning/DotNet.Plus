@@ -35,7 +35,7 @@ FixedPoint.MakeDouble<Int32>(0x00FFFFFD, wholeBits: 23, fractionalBits: 1);  // 
 FixedPoint.MakeDouble<UInt32>(0x00FFFFFD, wholeBits: 23, fractionalBits: 1); // Results in 8388606.5
 ```
 
-It can be common to combine the reading or writing of a fixed point value from a buffer with a particular endianness.
+It can be common to combine the reading/writing of fixed point values to/from a buffer with a particular endianness.
 
 ```c#
 var buffer = new byte[] { 0xFD, 0xFF };
