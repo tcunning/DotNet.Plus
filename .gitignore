@@ -1,5 +1,6 @@
 ### VSdoc ###
 */VSdoc/*
+src/DotNet.Plus/VSdoc/*
 
 ### ReSharper ###
 *.sln.DotSettings
