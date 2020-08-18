@@ -1,5 +1,8 @@
 # DotNet.Plus
- ![license](https://img.shields.io/github/license/martijn00/ExoPlayerXamarin.svg) [![Build Status](https://ci.appveyor.com/api/projects/status/github/tcunning/dotnet.plus?branch=master&svg=true)](https://ci.appveyor.com/project/tcunning/dotnet.plus) [![NuGet](https://img.shields.io/nuget/v/Tod.DotNet.Plus.svg)](https://www.nuget.org/packages/Tod.DotNet.Plus.svg) 
+[![license](https://img.shields.io/github/license/martijn00/ExoPlayerXamarin.svg)](https://github.com/tcunning/DotNet.Plus/blob/master/License.txt)
+[![Build Status](https://ci.appveyor.com/api/projects/status/github/tcunning/dotnet.plus?branch=master&svg=true)](https://ci.appveyor.com/project/tcunning/dotnet-plus)
+[![NuGet](https://img.shields.io/nuget/v/Tod.DotNet.Plus.svg)](https://www.nuget.org/packages/Tod.DotNet.Plus) 
+[![Join the chat at https://gitter.im/DotNet-Plus](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/DotNet-Plus) 
 
 A cross platform .NET Standard Library that has a foundational set of additions and extensional.  See the [API Documentation](http://dotnetplusdocs.todcunningham.com/title--.html) for more detailed information.
 
