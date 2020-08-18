@@ -1,5 +1,8 @@
 # DotNet.Plus
- ![license](https://img.shields.io/github/license/martijn00/ExoPlayerXamarin.svg) [![Build Status](https://ci.appveyor.com/api/projects/status/github/tcunning/dotnet.plus?branch=master&svg=true)](https://ci.appveyor.com/project/tcunning/dotnet.plus) [![NuGet](https://img.shields.io/nuget/v/Tod.DotNet.Plus.svg)](https://www.nuget.org/packages/Tod.DotNet.Plus.svg) 
+[![license](https://img.shields.io/github/license/martijn00/ExoPlayerXamarin.svg)](https://github.com/tcunning/DotNet.Plus/blob/master/License.txt)
+[![Build Status](https://ci.appveyor.com/api/projects/status/github/tcunning/dotnet.plus?branch=master&svg=true)](https://ci.appveyor.com/project/tcunning/dotnet-plus)
+[![NuGet](https://img.shields.io/nuget/v/Tod.DotNet.Plus.svg)](https://www.nuget.org/packages/Tod.DotNet.Plus) 
+[![Join the chat at https://gitter.im/DotNet-Plus](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/DotNet-Plus) 
 
 A cross platform .NET Standard Library that has a foundational set of additions and extensional.  See the [API Documentation](http://dotnetplusdocs.todcunningham.com/title--.html) for more detailed information.
 
@@ -35,7 +38,7 @@ FixedPoint.MakeDouble<Int32>(0x00FFFFFD, wholeBits: 23, fractionalBits: 1);  // 
 FixedPoint.MakeDouble<UInt32>(0x00FFFFFD, wholeBits: 23, fractionalBits: 1); // Results in 8388606.5
 ```
 
-It can be common to combine the reading or writing of a fixed point value from a buffer with a particular endianness.
+It can be common to combine the reading/writing of fixed point values to/from a buffer with a particular endianness.
 
 ```c#
 var buffer = new byte[] { 0xFD, 0xFF };
