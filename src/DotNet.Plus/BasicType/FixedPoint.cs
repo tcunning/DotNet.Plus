@@ -44,7 +44,8 @@ namespace DotNet.Plus.BasicType
         /// <param name="fractionalBits">The number of bits after the decimal</param>
         /// <returns>A fixed-point value of type TFixedPointValue</returns>
         /// <exception cref="ArgumentOutOfRangeException">If the wholeBits and/or fractionBits won't fit within the specified fixed-point</exception>
-        /// <exception cref="OverflowException">If the rational number would cause an overflow for the fixed-point number</exception>
+        /// <exception cref="OverflowException">If the rational number would cause an overflow for the fixed-point number OR if trying
+        /// to put a negative value in an unsigned integer type</exception>
         /// <exception cref="TypeInitializationException">If the TFixedPoint value isn't an integer type</exception>
         public static TFixedPointValue MakeFixedPoint<TFixedPointValue>(this float realValue, byte wholeBits, byte fractionalBits)
             where TFixedPointValue : struct, IConvertible => MakeFixedPoint<TFixedPointValue>((double) realValue, wholeBits, fractionalBits);
@@ -60,7 +61,8 @@ namespace DotNet.Plus.BasicType
         /// <param name="fractionalBits">The number of bits after the decimal</param>
         /// <returns>A fixed-point value of type TFixedPointValue</returns>
         /// <exception cref="ArgumentOutOfRangeException">If the wholeBits and/or fractionBits won't fit within the specified fixed-point</exception>
-        /// <exception cref="OverflowException">If the rational number would cause an overflow for the fixed-point number</exception>
+        /// <exception cref="OverflowException">If the rational number would cause an overflow for the fixed-point number OR if trying
+        /// to put a negative value in an unsigned integer type</exception>
         /// <exception cref="TypeInitializationException">If the TFixedPoint value isn't an integer type</exception>
         public static TFixedPointValue MakeFixedPoint<TFixedPointValue>(this double realValue, byte wholeBits, byte fractionalBits)
             where TFixedPointValue : struct, IConvertible
