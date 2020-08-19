@@ -4,21 +4,8 @@ using System.Threading.Tasks;
 
 namespace DotNet.Plus.Tasks
 {
-    public static class TaskCancel
+    public static class TaskCancelWhenCompletionSource
     {
-        public static async Task<TResult> CancelWhen<TResult>(this Task<TResult> task, CancellationToken cancellationToken, int timeoutMs)
-        {
-            using var cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-            if( timeoutMs > 0 )
-                cancellationTokenSource.CancelAfter(timeoutMs);
-
-            var cancellationTcs = new TaskCompletionSource<TResult>(TaskCreationOptions.RunContinuationsAsynchronously);
-
-            await Task.WhenAny(task, cancellationTcs.Task);
-
-            return task.Result;
-        }
-
         public static Task<TResult> CancelWhen<TResult>(this TaskCompletionSource<TResult> tcs, int timeoutMs) =>
             CancelWhen(tcs, CancellationToken.None, timeoutMs);
         
@@ -41,7 +28,7 @@ namespace DotNet.Plus.Tasks
             {
                 // WhenAny will not throw, unless its arguments are invalid.
                 //
-                await Task.WhenAny(tcs.Task, cancellationTcs.Task);
+                await Task.WhenAny(tcs.Task, cancellationTcs.Task).ConfigureAwait(false);
 
                 // If the given tcs was completed then go ahead and use its results.  It will throw if the tcs was
                 // in an exception or canceled state.
@@ -63,6 +50,5 @@ namespace DotNet.Plus.Tasks
                 throw new TaskCanceledException();
             }
         }
-
     }
 }

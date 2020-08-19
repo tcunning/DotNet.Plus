@@ -7,7 +7,7 @@ using Shouldly;
 namespace DotNet.Plus.Tasks.Tests
 {
     [TestClass]
-    public class TaskCancelTests
+    public class TaskCancelWhenCompletionSourceTests
     {
         [TestMethod]
         [Timeout(100)]
