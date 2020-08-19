@@ -30,5 +30,27 @@ namespace DotNet.Plus.Core
 
             return failureValue;
         }
+
+        /// <summary>
+        /// <para>This method executes the given operation in a try/catch block and catches all exceptions.  If an
+        /// exception does occur the given defaultValue is returned.</para>
+        ///
+        /// <para>
+        /// NOTE: While this is a simple pattern, it was introduced to better support test code coverage analysis.
+        ///       It was sometimes challenging to devices tests that always properly testing the returning of the
+        ///       default value.  By abstracting this pattern our, we can unit test this pattern independent of
+        ///       where it is used.</para>
+        /// </summary>
+        /// <param name="operation">The operation to perform</param>
+        /// <returns>The value for the operation or the defaultValue if the operation throws</returns>
+        public static void TryCatch(Action operation)
+        {
+            try
+            {
+                operation();
+            }
+            catch { /* ignored */ }
+        }
+
     }
 }
