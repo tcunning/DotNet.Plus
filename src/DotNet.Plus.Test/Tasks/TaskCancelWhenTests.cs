@@ -7,7 +7,7 @@ using Shouldly;
 namespace DotNet.Plus.Tasks.Tests
 {
     [TestClass]
-    public class TaskCancelWhenCompletionSourceTests
+    public class TaskCancelWhenTests
     {
         [TestMethod]
         [Timeout(100)]
@@ -17,7 +17,7 @@ namespace DotNet.Plus.Tasks.Tests
             using var cts = new CancellationTokenSource();
             tcs.SetResult(10);
 
-            var result = await tcs.CancelWhen(cts.Token);
+            var result = await tcs.Task.CancelWhen(cts.Token);
             result.ShouldBe(10);
         }
 
@@ -31,7 +31,7 @@ namespace DotNet.Plus.Tasks.Tests
             cts.Cancel();
             cts.IsCancellationRequested.ShouldBe(true);
 
-            Should.Throw<TaskCanceledException>(async () => await tcs.CancelWhen(cts.Token));
+            Should.Throw<TaskCanceledException>(async () => await tcs.Task.CancelWhen(cts.Token));
         }
 
         [TestMethod]
@@ -39,7 +39,7 @@ namespace DotNet.Plus.Tasks.Tests
         public void CancelWhenTimeoutTestAsync()
         {
             var tcs = new TaskCompletionSource<int>();
-            Should.Throw<TimeoutException>(async () => await tcs.CancelWhen(2));
+            Should.Throw<TimeoutException>(async () => await tcs.Task.CancelWhen(2));
         }
 
         [TestMethod]
@@ -55,7 +55,7 @@ namespace DotNet.Plus.Tasks.Tests
 
             });
 
-            var result = await tcs.CancelWhen(cts.Token);
+            var result = await tcs.Task.CancelWhen(cts.Token);
             result.ShouldBe(10);
         }
 
@@ -71,7 +71,7 @@ namespace DotNet.Plus.Tasks.Tests
                 tcs.SetException(new ArgumentException());
             });
 
-            Should.Throw<ArgumentException>(async () => await tcs.CancelWhen(cts.Token));
+            Should.Throw<ArgumentException>(async () => await tcs.Task.CancelWhen(cts.Token));
         }
 
         [TestMethod]
@@ -86,7 +86,7 @@ namespace DotNet.Plus.Tasks.Tests
                 tcs.SetCanceled();
             });
 
-            Should.Throw<TaskCanceledException>(async () => await tcs.CancelWhen(cts.Token));
+            Should.Throw<TaskCanceledException>(async () => await tcs.Task.CancelWhen(cts.Token));
         }
 
         [TestMethod]
@@ -101,8 +101,9 @@ namespace DotNet.Plus.Tasks.Tests
                 tcs.SetCanceled();
             });
 
-            Should.Throw<TaskCanceledException>(async () => await tcs.CancelWhen(CancellationToken.None, Timeout.Infinite));
+            Should.Throw<TaskCanceledException>(async () => await tcs.Task.CancelWhen(CancellationToken.None, Timeout.Infinite));
         }
 
     }
+
 }

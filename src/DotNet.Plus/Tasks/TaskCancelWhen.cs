@@ -6,9 +6,27 @@ namespace DotNet.Plus.Tasks
 {
     public static class TaskCancelWhen
     {
+        /// <summary>
+        /// Returns the results of the given task, unless a timeout occurs.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result</typeparam>
+        /// <param name="task">The Task to monitor</param>
+        /// <param name="timeoutMs">An optional timeout, the value Timeout.Infinite can be specified for no timeout</param>
+        /// <returns>A task that can be awaited to get the result</returns>
+        /// <exception cref="TimeoutException">This will be thrown if the task times out OR if timeoutMs is exceeded</exception>
         public static Task<TResult> CancelWhen<TResult>(this Task<TResult> task, int timeoutMs) =>
             CancelWhen(task, CancellationToken.None, timeoutMs);
 
+        /// <summary>
+        /// Returns the results of the given task, unless a cancel or timeout occurs.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result</typeparam>
+        /// <param name="task">The Task to monitor</param>
+        /// <param name="cancellationToken">A cancellation token or CancellationToken.None</param>
+        /// <param name="timeoutMs">An optional timeout, the value Timeout.Infinite can be specified for no timeout</param>
+        /// <returns>A task that can be awaited to get the result</returns>
+        /// <exception cref="TaskCanceledException">This will be thrown if the task is canceled OR the cancellationToken is canceled</exception>
+        /// <exception cref="TimeoutException">This will be thrown if the task times out OR if timeoutMs is exceeded</exception>
         public static async Task<TResult> CancelWhen<TResult>(this Task<TResult> task, CancellationToken cancellationToken, int timeoutMs = Timeout.Infinite)
         {
             using var cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);

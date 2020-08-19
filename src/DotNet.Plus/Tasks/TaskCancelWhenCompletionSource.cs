@@ -6,11 +6,35 @@ namespace DotNet.Plus.Tasks
 {
     public static class TaskCancelWhenCompletionSource
     {
+        /// <summary>
+        /// Cancels the given task completion source on timeout unless the tcs gets completed.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result</typeparam>
+        /// <param name="tcs">The Task Completion Source, this will be canceled and/or failed with a timeout exception if
+        /// one of those occurs.</param>
+        /// <param name="timeoutMs">An optional timeout, the value Timeout.Infinite can be specified for no timeout</param>
+        /// <returns>A task that can be awaited to get the completion result</returns>
+        /// <exception cref="TimeoutException">This will be thrown if the tcs times out OR if timeoutMs is exceeded</exception>
         public static Task<TResult> CancelWhen<TResult>(this TaskCompletionSource<TResult> tcs, int timeoutMs) =>
             CancelWhen(tcs, CancellationToken.None, timeoutMs);
-        
+
+        /// <summary>
+        /// Cancels the given task completion source when the given cancellationToken is canceled and/or on timeout unless
+        /// the tcs gets completed.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result</typeparam>
+        /// <param name="tcs">The Task Completion Source, this will be canceled and/or failed with a timeout exception if
+        /// one of those occurs.</param>
+        /// <param name="cancellationToken">A cancellation token or CancellationToken.None</param>
+        /// <param name="timeoutMs">An optional timeout, the value Timeout.Infinite can be specified for no timeout</param>
+        /// <returns>A task that can be awaited to get the completion result</returns>
+        /// <exception cref="TaskCanceledException">This will be thrown if the tcs is canceled OR the cancellationToken is canceled</exception>
+        /// <exception cref="TimeoutException">This will be thrown if the tcs times out OR if timeoutMs is exceeded</exception>
         public static async Task<TResult> CancelWhen<TResult>(this TaskCompletionSource<TResult> tcs, CancellationToken cancellationToken, int timeoutMs = Timeout.Infinite)
         {
+            if( cancellationToken == CancellationToken.None && timeoutMs < 0 )
+                return await tcs.Task.ConfigureAwait(false);
+
             using var cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             if( timeoutMs > 0 )
                 cancellationTokenSource.CancelAfter(timeoutMs);
