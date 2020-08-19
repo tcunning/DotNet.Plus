@@ -6,6 +6,35 @@
 
 A cross platform .NET Standard Library that has a foundational set of additions and extensional.  See the [API Documentation](http://dotnetplusdocs.todcunningham.com/title--.html) for more detailed information.
 
+### Enum
+
+There are several enhancements that are available to help making working with enum's easier.
+
+```c#
+[DefaultValue("ModelS")]
+enum TeslaCarMake
+{
+    Unknown,
+
+    [Description("Model S")]
+    ModelS,
+
+    [Description("Model X")]
+    ModelX,
+
+    [Description("Model 3")]
+    Model3,
+
+    [Description("Model Y")]
+    ModelY
+}
+
+var value = Enum<TeslaCarMake>.DefaultValue;      // Result will be TeslaCarMake.ModelS
+var desc = value.Description();                   // Result will be "Model S"
+value = Enum<TeslaCarMake>.TryConvert(2f);        // Result will be TeslaCarMake.ModelX
+value = Enum<TeslaCarMake>.TryConvert("ModelY");  // Result will be TeslaCarMake.ModelY
+```
+
 ### Endianness 
 
 Conversion to and from Big and Little [endian format](https://en.wikipedia.org/wiki/Endianness) is supported.  
