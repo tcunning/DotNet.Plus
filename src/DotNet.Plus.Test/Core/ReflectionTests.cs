@@ -17,6 +17,7 @@ namespace DotNet.Plus.Core.Tests
         [TestMethod()]
         public void GetPropertyTest()
         {
+            AddOne(1).ShouldBe(2);
             typeof(ReflectionTests).TryGetMethod(nameof(AddOne), BindingFlags.Instance | BindingFlags.Public, typeof(int)).ShouldNotBeNull();
 
             this.SetProperty<int>(nameof(TestProperty), 100);

@@ -87,7 +87,7 @@ namespace DotNet.Plus.Test.BasicType
         [DataRow(1d, (UInt32)0x0100, (byte)8, (byte)8)]
         [DataRow(16d, (UInt32)0x0100, (byte)8, (byte)4)]
         [DataRow(4294967295d, (UInt32)0xFFFFFFFF, (byte)32, (byte)0)]
-        public void ValueDoubleUInt64Test(double realValue, UInt32 fixedPointValue, byte wholeBits, byte fractionalBits)
+        public void ValueDoubleUInt32Test(double realValue, UInt32 fixedPointValue, byte wholeBits, byte fractionalBits)
         {
             // The fixedPointValue may have additional bits set which should be ignored when making the real value.  Only the
             // bits that make up the whole and fractional parts are considered.
