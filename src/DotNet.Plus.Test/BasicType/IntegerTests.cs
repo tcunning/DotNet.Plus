@@ -8,13 +8,6 @@ namespace DotNet.Plus.Test.BasicType
     [TestClass]
     public class IntegerTests
     {
-        public TFixedPointValue Testing<TFixedPointValue>(int other)
-            where TFixedPointValue : struct, IConvertible
-        {
-            Integer<TFixedPointValue> test = other; 
-            return test.Value;
-        }
-
         public enum Test : short { A = -1, B = 0, C = 1 }
 
         [TestMethod]

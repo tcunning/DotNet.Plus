@@ -63,10 +63,12 @@ namespace DotNet.Plus.Test.Pattern
             // In order to get 100% test coverage of all paths we force an exception to get generated 
             // from Dispose and eaten by TryDispose because we never allow the set disposed via doing DI
             // of ISetOnceValue.
-            // 
-            var t2Test = new CommonDisposableTest2(new NeverSetBool());
+            //
+            var neverSet = new NeverSetBool();
+            var t2Test = new CommonDisposableTest2(neverSet);
             Should.Throw<ObjectDisposedException>(() => t2Test.Dispose());  // Should report an exception
             t2Test.TryDispose();                                                  // Test that an exception didn't get thrown!
+            neverSet.Value.ShouldBe(default);
         }
 
         private class CommonDisposableTest : CommonDisposable

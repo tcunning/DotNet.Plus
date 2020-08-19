@@ -32,6 +32,13 @@ namespace DotNet.Plus.Test.Pattern
             private NoPrivateDefaultConstructorSingleton(int test) { }
         }
 
+        class HasPublicConstructorSingleton : Singleton<HasPublicConstructorSingleton>
+        {
+            private HasPublicConstructorSingleton() { }
+
+            public HasPublicConstructorSingleton(int value) : this() { }
+        }
+        
         class TaskRaceSingleton : Singleton<TaskRaceSingleton>
         {
             private TaskRaceSingleton() { }
@@ -48,7 +55,11 @@ namespace DotNet.Plus.Test.Pattern
             Should.Throw<ConstructorException>(() => FailedConstructorSingleton.Instance);
             Should.Throw<ConstructorException>(() => NoPrivateConstructorSingleton.Instance);
             Should.Throw<ConstructorException>(() => NoPrivateDefaultConstructorSingleton.Instance);
+            Should.Throw<ConstructorException>(() => HasPublicConstructorSingleton.Instance);
 
+            (new NoPrivateConstructorSingleton()).ShouldNotBeNull();
+            (new HasPublicConstructorSingleton(5)).ShouldNotBeNull();
+            
             // Try to get two instances at the same time.
             TaskRaceSingleton taskRace1 = null;
             TaskRaceSingleton taskRace2 = null;
