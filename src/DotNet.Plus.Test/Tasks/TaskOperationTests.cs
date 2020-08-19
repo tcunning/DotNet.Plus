@@ -7,7 +7,7 @@ using Shouldly;
 namespace DotNet.Plus.Test.Core
 {
     [TestClass()]
-    public class OperationTests
+    public class TaskOperationTests
     {
         [TestMethod()]
         public void TryCatchTest()
@@ -15,8 +15,8 @@ namespace DotNet.Plus.Test.Core
             Operation.TryCatch<bool>(() => true, false).ShouldBe(true);
             Operation.TryCatch<bool>(() => throw new Exception(), false).ShouldBe(false);
             
-            Operation.TryCatchAsync<bool>(() => Task.FromResult(true), false).Result.ShouldBe(true);
-            Operation.TryCatchAsync<bool>(() => throw new Exception(), false).Result.ShouldBe(false);
+            TaskOperation.TryCatchAsync<bool>(() => Task.FromResult(true), false).Result.ShouldBe(true);
+            TaskOperation.TryCatchAsync<bool>(() => throw new Exception(), false).Result.ShouldBe(false);
 
         }
     }
