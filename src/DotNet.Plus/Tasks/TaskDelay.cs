@@ -24,7 +24,7 @@ namespace DotNet.Plus.Tasks
         /// <returns>true if the delay completed successfully, otherwise false is returned such as
         /// when the delay was canceled.</returns>
         public static Task<bool> TryDelay(int timeMs, CancellationToken cancelToken) =>
-            TaskOperation.TryCatchAsync(async () => { await Task.Delay(timeMs, cancelToken); }, successValue: true);
+            Task.Delay(timeMs, cancelToken).TryCatchAsync(successValue: true);
 
         /// <summary>
         /// Helper method to delay w/o having to be concerned about handling exceptions.
@@ -33,7 +33,7 @@ namespace DotNet.Plus.Tasks
         /// <param name="cancelToken"></param>
         /// <returns>returns true if the delay completed successfully, otherwise false is returned.  The delay can fail because of the given cancellation token.</returns>
         public static Task<bool> TryDelay(TimeSpan timespan, CancellationToken cancelToken) =>
-            TaskOperation.TryCatchAsync(async () => { await Task.Delay(timespan, cancelToken); }, successValue: true);
+            Task.Delay(timespan, cancelToken).TryCatchAsync(successValue: true);
 
     }
 }

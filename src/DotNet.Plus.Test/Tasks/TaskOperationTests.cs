@@ -6,18 +6,17 @@ using Shouldly;
 
 namespace DotNet.Plus.Test.Core
 {
-    [TestClass()]
+    [TestClass]
     public class TaskOperationTests
     {
-        [TestMethod()]
+        [TestMethod]
         public void TryCatchTest()
         {
             Operation.TryCatch<bool>(() => true, false).ShouldBe(true);
             Operation.TryCatch<bool>(() => throw new Exception(), false).ShouldBe(false);
             
-            TaskOperation.TryCatchAsync<bool>(() => Task.FromResult(true), false).Result.ShouldBe(true);
-            TaskOperation.TryCatchAsync<bool>(() => throw new Exception(), false).Result.ShouldBe(false);
-
+            Task.FromResult(true).TryCatchAsync(failureValue: false).Result.ShouldBe(true);
+            Task.FromException<bool>(new Exception()).TryCatchAsync(failureValue: false).Result.ShouldBe(false);
         }
     }
 }

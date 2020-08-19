@@ -18,9 +18,9 @@ namespace DotNet.Plus.Core
         /// </summary>
         /// <typeparam name="TValue">The Type of the value that should be returned</typeparam>
         /// <param name="operation">The operation to perform</param>
-        /// <param name="defaultValue">The default value that should be returned when an exception is caught.</param>
+        /// <param name="failureValue">The default value that should be returned when an exception is caught.</param>
         /// <returns>The value for the operation or the defaultValue if the operation throws</returns>
-        public static TValue TryCatch<TValue>(Func<TValue> operation, TValue defaultValue = default)
+        public static TValue TryCatch<TValue>(Func<TValue> operation, TValue failureValue = default)
         {
             try
             {
@@ -28,7 +28,7 @@ namespace DotNet.Plus.Core
             }
             catch { /* ignored */ }
 
-            return defaultValue;
+            return failureValue;
         }
     }
 }
