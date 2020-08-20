@@ -6,24 +6,52 @@ using DotNet.Plus.Collection;
 
 namespace DotNet.Plus.Tasks
 {
+    ///<summary>
+    ///<para>Enables sequential execution by only allowing one lock to be acquired at a time.  The locks will be processed in
+    ///FIFO order and supports async operations being performed within the lock.</para>
+    ///<code>
+    /// TaskLock _lockQueue = new TaskLock(maxQueueSize: 100);
+    ///
+    /// using(await _lockQueue.GetLock(cancellationToken))
+    /// {
+    ///     /* This code will be done under the acquired lock, only one lock will be given out at a time */
+    /// }
+    /// </code>
+    /// </summary>
     public class TaskLock
     {
         private readonly List<TaskLockTracker> _lockedTaskQueue = new List<TaskLockTracker>();
 
         private TaskLockTracker? _currentLock = null;
 
+        /// <summary>
+        /// The maximum number of items allowed in the queue.
+        /// </summary>
         public int MaxQueueSize { get; }
 
+        /// <summary>
+        /// Creates a new TaskLock
+        /// </summary>
+        /// <param name="maxQueueSize">Optional max size of the lock queue.  Note: That up to this many locks may
+        /// be waiting at the same time.  However, if a lock is canceled before being granted it may not be removed
+        /// from the lock queue until the current lock, if any, is releases.
+        /// TODO: This limitation should be removed in the future as canceled operations shouldn't consume space in the lock queue
+        /// </param>
         public TaskLock(int maxQueueSize = Int32.MaxValue)
         {
             MaxQueueSize = maxQueueSize;
         }
 
+        /// <summary>
+        /// Gets a lock with the given cancelToken
+        /// </summary>
+        /// <param name="cancelToken"></param>
+        /// <returns></returns>
         public Task<TaskLockTracker> GetLock(CancellationToken cancelToken) => GetLock(cancelToken, TimeSpan.MaxValue);
 
         ///<summary>
         ///<para>Enables sequential execution by only allowing one lock to be acquired at a time.  The locks will be processed in
-        ///FIFO order.</para>
+        ///FIFO order and supports async operations being performed within the lock.</para>
         ///<para>NOTE: The caller MUST dispose the returned object in order to release the lock and allows others to get a
         /// chance to execute.</para>
         /// </summary>
