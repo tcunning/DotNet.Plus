@@ -25,8 +25,8 @@ namespace DotNet.Plus.Tasks
             _taskLock = taskLock;
 
             _cts = CancellationTokenSource.CreateLinkedTokenSource(cancelToken);
-            if( timeout < TimeSpan.MaxValue )
-                _cts.CancelAfter(timeout);
+            if( timeout > TimeSpan.Zero && timeout < TimeSpan.MaxValue)
+                _cts.CancelAfter(timeout);  // todo: would be nice if we threw a TimeoutException vs TaskCanceledException
             CancelToken = _cts.Token;
         }
 

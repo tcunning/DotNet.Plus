@@ -29,9 +29,9 @@ namespace DotNet.Plus.Tasks
         /// </summary>
         ///<example>
         ///<code>
-        /// TaskSerialQueue _pidSerialQueue = new TaskSerialQueue(maxQueueSize: 100);
+        /// TaskLock _lockQueue = new TaskLock(maxQueueSize: 100);
         ///
-        /// using(await _pidSerialQueue.GetLock(cancellationToken))
+        /// using(await _lockQueue.GetLock(cancellationToken))
         /// {
         ///     /* This code will be done under the acquired lock, only one lock will be given out at a time */
         /// }
@@ -88,8 +88,7 @@ namespace DotNet.Plus.Tasks
                 // If the given serialLock doesn't match the _currentLock then go ahead and remove it from
                 // the lock list as it no longer requires a lock.
                 //
-                if( !object.ReferenceEquals(_currentLock, lockTracker) )
-                {
+                if( !object.ReferenceEquals(_currentLock, lockTracker) ) {
                     _lockedTaskQueue.TryRemove(lockTracker);
                     return;
                 }
