@@ -10,7 +10,7 @@ namespace DotNet.Plus.Tasks.Tests
     public class TaskLockTests
     {
         [TestMethod]
-        [Timeout(100)]
+        [Timeout(5000)]
         public async Task GetLockTestAsync()
         {
             TaskLock lockQueue = new TaskLock(maxQueueSize: 100);
@@ -32,7 +32,7 @@ namespace DotNet.Plus.Tasks.Tests
         }
 
         [TestMethod]
-        [Timeout(100)]
+        [Timeout(5000)]
         public async Task GetLockTest2Async()
         {
             TaskLock lockQueue = new TaskLock(maxQueueSize: 100);
@@ -72,7 +72,7 @@ namespace DotNet.Plus.Tasks.Tests
         }
 
         [TestMethod]
-        [Timeout(100)]
+        [Timeout(5000)]
         public async Task GetLockTest3Async()
         {
             TaskLock lockQueue = new TaskLock(maxQueueSize: 100);
@@ -105,7 +105,7 @@ namespace DotNet.Plus.Tasks.Tests
         }
 
         [TestMethod]
-        [Timeout(1000)]
+        [Timeout(5000)]
         public async Task GetLockTest4Async()
         {
             TaskLock lockQueue = new TaskLock(maxQueueSize: 1);
