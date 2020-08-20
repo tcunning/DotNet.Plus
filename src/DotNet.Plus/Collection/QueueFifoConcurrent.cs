@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using DotNet.Plus.Core;
 
 namespace DotNet.Plus.Collection
 {
@@ -12,6 +13,8 @@ namespace DotNet.Plus.Collection
     public class QueueFifoConcurrent<TItem> : IProducerConsumerCollection<TItem>, IReadOnlyCollection<TItem>
     {
         private readonly ConcurrentQueue<TItem> _queue;
+
+        private readonly object _syncObject = new object();
 
         /// <summary>
         /// Maximum size of the queue
@@ -72,8 +75,7 @@ namespace DotNet.Plus.Collection
         /// </summary>
         public void Clear()
         {
-            lock ( ((ICollection)this).SyncRoot )
-            {
+            lock( _syncObject ) {
                 //_queue.Clear();           // TODO: Supported in .NET Standard 2.1
                 while( _queue.Count > 0 && _queue.TryDequeue(out _) )
                     continue;
@@ -85,8 +87,7 @@ namespace DotNet.Plus.Collection
         /// <inheritdoc cref="ConcurrentQueue{TValue}.CopyTo(TValue[], int)"/>
         public void CopyTo(TItem[] array, int index)
         {
-            lock( ((ICollection)this).SyncRoot )
-            {
+            lock( _syncObject ) {
                 _queue.CopyTo(array, index);
             }
         }
@@ -94,8 +95,7 @@ namespace DotNet.Plus.Collection
         /// <inheritdoc cref="ICollection.CopyTo(Array, int)"/>
         void ICollection.CopyTo(Array array, int index)
         {
-            lock( ((ICollection)this).SyncRoot )
-            {
+            lock( _syncObject ) {
                 ((ICollection)_queue).CopyTo(array, index);
             }
         }
@@ -106,7 +106,8 @@ namespace DotNet.Plus.Collection
         /// <list type="bullet">
         ///     <item>
         ///         <term>QueueOption.None</term>
-        ///         <description>The oldest items on the queue will be removed until there is room in the queue for the new item</description>
+        ///         <description>The oldest items on the queue will be removed until there is room in the queue for the new item.
+        /// An exception will be thrown if there was a problem trying to dequeue items to make room for the new item.</description>
         ///     </item>
         ///     <item>
         ///         <term>QueueOption.ThrowOnAdd</term>
@@ -117,12 +118,12 @@ namespace DotNet.Plus.Collection
         /// <param name="item">The item to add to the end of the queue</param>
         public void Enqueue(TItem item)
         {
-            lock( ((ICollection)this).SyncRoot )
+            lock( _syncObject )
             {
-                if( IsFull && Option.HasFlag(QueueOption.ThrowOnAdd) )
+                if( IsFull && Option.HasFlag(QueueOption.ThrowOnFull) )
                     throw new ArgumentOutOfRangeException(nameof(item), item, $"The queue is full with {_queue.Count} items.");
 
-                while( IsFull && _queue.TryDequeue(out _) )
+                while( IsFull && EnableAutoDequeue && _queue.TryDequeue(out _) )
                     continue;
 
                 if( IsFull )
@@ -132,6 +133,11 @@ namespace DotNet.Plus.Collection
             }
         }
 
+        /// <summary>
+        /// This is used for unit testing to disable the auto dequeuing of items in the queue.
+        /// </summary>
+        private bool EnableAutoDequeue { get; set; } = true;
+        
         /// <inheritdoc cref="ConcurrentQueue{TValue}.GetEnumerator()"/>
         public IEnumerator<TItem> GetEnumerator() => _queue.GetEnumerator();
 
@@ -160,23 +166,19 @@ namespace DotNet.Plus.Collection
         /// </returns>
         public bool TryAdd(TItem item)
         {
-            try
-            {
+            return Operation.TryCatch(() => {
                 Enqueue(item);
                 return true;
-            }
-            catch( Exception ex )
-            {
-                return false;
-            }
+            });
         }
 
+        /// <inheritdoc cref="ConcurrentQueue{TValue}.TryDequeue(out TValue)"/>
         bool IProducerConsumerCollection<TItem>.TryTake(out TItem item) => TryDequeue(out item);
 
         /// <inheritdoc cref="ConcurrentQueue{TValue}.TryDequeue(out TValue)"/>
         public bool TryDequeue(out TItem result)
         {
-            lock( ((ICollection)this).SyncRoot ) {
+            lock( _syncObject ) {
                 return _queue.TryDequeue(out result);
             }
         }

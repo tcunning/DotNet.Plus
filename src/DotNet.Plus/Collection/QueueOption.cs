@@ -18,7 +18,7 @@ namespace DotNet.Plus.Collection
         /// If this option is provided, an ArgumentOutOfRangeException will be thrown if an Enqueue is attempted on
         /// a full queue.
         /// </summary>
-        ThrowOnAdd = 0x0001,
+        ThrowOnFull = 0x0001,
     }
 }
 

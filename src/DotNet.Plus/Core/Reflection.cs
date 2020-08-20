@@ -34,7 +34,7 @@ namespace DotNet.Plus.Core
         /// <returns>The found property</returns>
         /// <typeparam name="TProperty">The type of the property, for example int</typeparam>
         /// <exception cref="ArgumentException">If the property couldn't be found</exception>
-        public static TProperty GetProperty<TProperty>(this object instance, string propertyName, BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance) =>
+        public static TProperty GetProperty<TProperty>(this object instance, string propertyName, BindingFlags bindingFlags = BindingFlags.Public) =>
             GetProperty<TProperty>(instance?.GetType() ?? throw new ArgumentNullException(nameof(instance)), instance, propertyName, bindingFlags);
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace DotNet.Plus.Core
         /// <exception cref="ArgumentException">If the property couldn't be found</exception>
         public static TProperty GetProperty<TProperty>(this Type objectType, object? instance, string propertyName, BindingFlags bindingFlags)
         {
-            PropertyInfo? property = objectType.GetProperty(propertyName, bindingFlags);
+            PropertyInfo? property = objectType.GetProperty(propertyName, bindingFlags | BindingFlags.GetProperty | BindingFlags.Instance);
             if( property == null )
                 throw new ArgumentException($"Property {propertyName} was not found for Type {objectType.Name}", nameof(propertyName));
 
@@ -65,7 +65,7 @@ namespace DotNet.Plus.Core
         /// <returns>The found field</returns>
         /// <typeparam name="TField">The type of the field, for example int</typeparam>
         /// <exception cref="ArgumentException">If the field couldn't be found</exception>
-        public static TField GetField<TField>(this object instance, string fieldName, BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance) =>
+        public static TField GetField<TField>(this object instance, string fieldName, BindingFlags bindingFlags = BindingFlags.Public) =>
             GetField<TField>(instance?.GetType() ?? throw new ArgumentNullException(nameof(instance)), instance, fieldName, bindingFlags);
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace DotNet.Plus.Core
         /// <exception cref="ArgumentException">If the field couldn't be found</exception>
         public static TField GetField<TField>(this Type objectType, object instance, string fieldName, BindingFlags bindingFlags)
         {
-            var field = objectType.GetField(fieldName, bindingFlags);
+            var field = objectType.GetField(fieldName, bindingFlags | BindingFlags.GetField | BindingFlags.Instance);
             if( field == null )
                 throw new ArgumentException($"Field {fieldName} was not found for Type {objectType.Name}", nameof(fieldName));
 
@@ -96,7 +96,7 @@ namespace DotNet.Plus.Core
         /// <param name="bindingFlags">Flags that identify the properties access</param>
         /// <typeparam name="TProperty">The type of the property, for example int</typeparam>
         /// <exception cref="ArgumentException">If the property couldn't be found</exception>
-        public static void SetProperty<TProperty>(this object instance, string propertyName, TProperty value, BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance) =>
+        public static void SetProperty<TProperty>(this object instance, string propertyName, TProperty value, BindingFlags bindingFlags = BindingFlags.Public) =>
             SetProperty<TProperty>(instance?.GetType() ?? throw new ArgumentNullException(nameof(instance)), instance, propertyName, value, bindingFlags);
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace DotNet.Plus.Core
         /// <exception cref="ArgumentException">If the property couldn't be found</exception>
         public static void SetProperty<TProperty>(this Type objectType, object? instance, string propertyName, TProperty value, BindingFlags bindingFlags)
         {
-            PropertyInfo? property = objectType.GetProperty(propertyName, bindingFlags);
+            PropertyInfo? property = objectType.GetProperty(propertyName, bindingFlags | BindingFlags.SetProperty | BindingFlags.Instance);
             if( property == null )
                 throw new ArgumentException($"Property {propertyName} was not found for Type {objectType.Name}", nameof(propertyName));
 
@@ -128,7 +128,7 @@ namespace DotNet.Plus.Core
         /// <param name="bindingFlags">Flags that identify the field's access</param>
         /// <typeparam name="TField">The type of the field, for example int</typeparam>
         /// <exception cref="ArgumentException">If the field couldn't be found</exception>
-        public static void SetField<TField>(this object instance, string fieldName, TField value, BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance) =>
+        public static void SetField<TField>(this object instance, string fieldName, TField value, BindingFlags bindingFlags = BindingFlags.Public) =>
             SetField<TField>(instance?.GetType() ?? throw new ArgumentNullException(nameof(instance)), instance, fieldName, value, bindingFlags);
 
         /// <summary>
@@ -143,7 +143,7 @@ namespace DotNet.Plus.Core
         /// <exception cref="ArgumentException">If the field couldn't be found</exception>
         public static void SetField<TField>(this Type objectType, object? instance, string fieldName, TField value, BindingFlags bindingFlags)
         {
-            var field = objectType.GetField(fieldName, bindingFlags);
+            var field = objectType.GetField(fieldName, bindingFlags | BindingFlags.SetField | BindingFlags.Instance);
             if( field == null )
                 throw new ArgumentException($"Field {fieldName} was not found for Type {objectType.Name}", nameof(fieldName));
 
