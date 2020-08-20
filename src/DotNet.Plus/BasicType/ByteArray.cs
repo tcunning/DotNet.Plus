@@ -2,6 +2,9 @@
 
 namespace DotNet.Plus.BasicType
 {
+    /// <summary>
+    /// Extensions for working with byte arrays such as creating ArraySegments, Filling, and Clearing
+    /// </summary>
     public static class ByteArray
     {
         /// <summary>

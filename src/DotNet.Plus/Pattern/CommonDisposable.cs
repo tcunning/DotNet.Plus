@@ -70,7 +70,7 @@ namespace DotNet.Plus.Pattern
                 throw new ObjectDisposedException(nameof(this.GetType));
         }
 
-        public abstract void Dispose(bool disposing);
+        protected abstract void Dispose(bool disposing);
     }
 
 }

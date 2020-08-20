@@ -1,27 +1,47 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 
 namespace DotNet.Plus.BasicType
 {
+    /// <summary>
+    /// Defines what system types ARE Integers  This is useful for generic types that only work with integer
+    /// values.
+    /// </summary>
+    /// <typeparam name="TIntegerValue">The type of the Integer such as Int32 or UInt32, must be an integer type</typeparam>
     public static class IntegerDefinition<TIntegerValue>
         where TIntegerValue : struct, IConvertible
     {
-        // ReSharper disable once StaticMemberInGenericType (this is exactly what we want!)
+        /// <summary>
+        /// The cached system TypeCode of the integer
+        /// </summary>
+        /// ReSharper disable once StaticMemberInGenericType (this is exactly what we want!)
         public static readonly TypeCode TypeCode;
 
-        // ReSharper disable once StaticMemberInGenericType (this is exactly what we want!)
+        /// <summary>
+        /// The size of the integer in bytes, this is useful as generic classes can't get the
+        /// size of the generic type at runtime without jumping though some hoops.
+        /// </summary>
+        /// ReSharper disable once StaticMemberInGenericType (this is exactly what we want!)
         public static readonly int Size;
 
-        // ReSharper disable once StaticMemberInGenericType (this is exactly what we want!)
+        /// <summary>
+        /// True if the Integer is a signed integer
+        /// </summary>
+        /// ReSharper disable once StaticMemberInGenericType (this is exactly what we want!)
         public static readonly bool IsSigned;
 
-        // This can only return true as the static constructor will throw if it's not an integer 
+        /// <summary>
+        /// This will always be true as the type has to be an integer. The static constructor will
+        /// throw if TIntegerValue isn't a supported integer type.   This method is useful for
+        /// forcing that static initialization if it hasn't already been performed.
+        /// </summary>
+        /// ReSharper disable once StaticMemberInGenericType (this is exactly what we want!)
         public static bool IsInteger => true;
 
         /// <summary>
-        /// Initialize the Integer
+        /// Initialize the Integer, will throw if TIntegerValue isn't an integer type. 
         /// </summary>
-        /// <exception cref="TypeInitializationException">Will be thrown if the TValue isn't a system integer type</exception>
+        /// <exception cref="TypeInitializationException">Will be thrown if the TValue isn't a system integer type
+        /// with an inner exception of ArgumentException</exception>
         static IntegerDefinition()
         {
             TypeCode = System.Type.GetTypeCode(typeof(TIntegerValue));

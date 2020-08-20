@@ -2,6 +2,9 @@
 
 namespace DotNet.Plus.BasicType
 {
+    /// <summary>
+    /// Constants for working with bit/byte conversions
+    /// </summary>
     public static class Byte
     {
         /// <summary>

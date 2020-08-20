@@ -2,6 +2,10 @@
 
 namespace DotNet.Plus.BasicType
 {
+    /// <summary>
+    /// Extensions to help convert from another type into an enum.
+    /// </summary>
+    /// <typeparam name="TEnum">The Type of enum</typeparam>
     public static partial class Enum<TEnum>
         where TEnum : Enum
     {

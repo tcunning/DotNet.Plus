@@ -4,6 +4,9 @@ using System.Linq;
 
 namespace DotNet.Plus.BasicType
 {
+    /// <summary>
+    /// Array extensions for formatting strings that represent the byte array's content.
+    /// </summary>
     public static class ByteArrayDebug
     {
         /// <summary>
