@@ -5,6 +5,9 @@ using DotNet.Plus.Core;
 
 namespace DotNet.Plus.Tasks
 {
+    /// <summary>
+    /// Adds various extensions to allow a delay to be performed
+    /// </summary>
     public static class TaskDelay
     {
         /// <summary>
@@ -13,7 +16,7 @@ namespace DotNet.Plus.Tasks
         /// <param name="timeSpan">The time to delay expressed as a TimeSpan</param>
         /// <param name="cancelToken">A cancellation token that will cancel the delay early</param>
         /// <returns>When the timeSpan completes or the operation is canceled</returns>
-        public static Task Delay(TimeSpan timeSpan, CancellationToken cancelToken) => 
+        public static Task Delay(this TimeSpan timeSpan, CancellationToken cancelToken) => 
             Task.Delay((int)timeSpan.TotalMilliseconds, cancelToken);
 
         /// <summary>
@@ -23,7 +26,7 @@ namespace DotNet.Plus.Tasks
         /// <param name="cancelToken">A cancellation token that will cancel the delay early</param>
         /// <returns>true if the delay completed successfully, otherwise false is returned such as
         /// when the delay was canceled.</returns>
-        public static Task<bool> TryDelay(int timeMs, CancellationToken cancelToken) =>
+        public static Task<bool> TryDelay(this int timeMs, CancellationToken cancelToken) =>
             Task.Delay(timeMs, cancelToken).TryCatchAsync(successValue: true);
 
         /// <summary>
@@ -32,7 +35,7 @@ namespace DotNet.Plus.Tasks
         /// <param name="timespan"></param>
         /// <param name="cancelToken"></param>
         /// <returns>returns true if the delay completed successfully, otherwise false is returned.  The delay can fail because of the given cancellation token.</returns>
-        public static Task<bool> TryDelay(TimeSpan timespan, CancellationToken cancelToken) =>
+        public static Task<bool> TryDelay(this TimeSpan timespan, CancellationToken cancelToken) =>
             Task.Delay(timespan, cancelToken).TryCatchAsync(successValue: true);
 
     }

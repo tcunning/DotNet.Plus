@@ -13,14 +13,14 @@ namespace DotNet.Plus.Test.Pattern
         {
             public readonly int Id;
             public TestObject() => Id = ++_testObjectCount;
-            public override void Dispose(bool disposing) { }
+            protected override void Dispose(bool disposing) { }
         }
 
         class TestObjectCustom : CommonDisposable
         {
             public readonly int Id;
             public TestObjectCustom(int id) => Id = id;
-            public override void Dispose(bool disposing) { }
+            protected override void Dispose(bool disposing) { }
         }
 
         [TestMethod]

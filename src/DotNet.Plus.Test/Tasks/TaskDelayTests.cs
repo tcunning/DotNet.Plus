@@ -13,7 +13,7 @@ namespace DotNet.Plus.Tasks.Tests
         public void DelayTestAsync()
         {
             using var cts = new CancellationTokenSource();
-            var result = TaskDelay.Delay(TimeSpan.FromMilliseconds(5), cts.Token);
+            var result = TimeSpan.FromMilliseconds(5).Delay(cts.Token);
             cts.Cancel();
             result.Exception.ShouldNotBeOfType<TaskCanceledException>();
         }
@@ -22,7 +22,7 @@ namespace DotNet.Plus.Tasks.Tests
         public void TryDelayTestAsync()
         {
             using var cts = new CancellationTokenSource();
-            var result = TaskDelay.TryDelay(5, cts.Token);
+            var result = 5.TryDelay(cts.Token);
             cts.Cancel();
             result.Result.ShouldBe(false);
         }
@@ -31,7 +31,7 @@ namespace DotNet.Plus.Tasks.Tests
         public void TryDelayTimeSpanTestAsync()
         {
             using var cts = new CancellationTokenSource();
-            var result = TaskDelay.TryDelay(TimeSpan.FromMilliseconds(5), cts.Token);
+            var result = TimeSpan.FromMilliseconds(5).TryDelay(cts.Token);
             cts.Cancel();
             result.Result.ShouldBe(false);
         }

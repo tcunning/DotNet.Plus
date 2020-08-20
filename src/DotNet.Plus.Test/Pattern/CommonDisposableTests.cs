@@ -42,7 +42,7 @@ namespace DotNet.Plus.Test.Pattern
             {
             }
 
-            public override void Dispose(bool disposing)
+            protected override void Dispose(bool disposing)
             {
             }
         }
@@ -78,7 +78,7 @@ namespace DotNet.Plus.Test.Pattern
             {
             }
 
-            public override void Dispose(bool disposing)
+            protected override void Dispose(bool disposing)
             {
             }
         }

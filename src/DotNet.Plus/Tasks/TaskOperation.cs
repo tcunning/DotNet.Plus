@@ -3,6 +3,10 @@ using System.Threading.Tasks;
 
 namespace DotNet.Plus.Core
 {
+    /// <summary>
+    /// Helpers to wrap try/catch operations.  This is a more functionality approach to try/catch management
+    /// and helps in unit testing failures.
+    /// </summary>
     public static class TaskOperation
     {
         /// <summary>

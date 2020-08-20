@@ -6,6 +6,10 @@ using DotNet.Plus.Pattern;
 
 namespace DotNet.Plus.Tasks
 {
+    /// <summary>
+    /// This class is created and used by <see cref="TaskLock"/> in order to manage locks that have been created.
+    /// It is important that the recipient calls dispose when they are done with the lock to allow other access.
+    /// </summary>
     public class TaskLockTracker : CommonDisposable
     {
         private readonly TaskLock _taskLock;
@@ -30,7 +34,7 @@ namespace DotNet.Plus.Tasks
             CancelToken = _cts.Token;
         }
 
-        public override void Dispose(bool disposing)
+        protected override void Dispose(bool disposing)
         {
             _taskLock.LockNoLongerNeeded(this);
             _cts.TryCancelAndDispose();
