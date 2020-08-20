@@ -15,7 +15,9 @@ namespace DotNet.Plus.Test.Time
             var timeStamp = FreeRunningTimer.ElapsedTime;
             await Task.Delay(10);
             var timeStamp2 = FreeRunningTimer.ElapsedTime;
-            (timeStamp2 - timeStamp).TotalMilliseconds.ShouldBeGreaterThanOrEqualTo(10);
+            
+            if( FreeRunningTimer.IsHighResolution )
+                (timeStamp2 - timeStamp).TotalMilliseconds.ShouldBeGreaterThanOrEqualTo(10);
         }
     }
 }

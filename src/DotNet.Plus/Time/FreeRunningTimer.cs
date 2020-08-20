@@ -12,6 +12,11 @@ namespace DotNet.Plus.Time
         private static readonly Stopwatch _stopwatch = Stopwatch.StartNew();
 
         /// <summary>
+        /// Returns true if the underlying implementation is using a high resolution timer
+        /// </summary>
+        public static bool IsHighResolution => Stopwatch.IsHighResolution;
+
+        /// <summary>
         /// Amount of time that has passed since the FreeRunningTimer was first accessed
         /// </summary>
         public static TimeSpan ElapsedTime => _stopwatch.Elapsed;
