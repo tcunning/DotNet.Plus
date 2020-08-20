@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace DotNet.Plus.Collection
 {
@@ -24,6 +23,5 @@ namespace DotNet.Plus.Collection
 
             return hashSet1.SetEquals(hashSet2);
         }
-
     }
 }

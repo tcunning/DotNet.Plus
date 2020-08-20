@@ -18,5 +18,20 @@ namespace DotNet.Plus.Test.Core
             Task.FromResult(true).TryCatchAsync(failureValue: false).Result.ShouldBe(true);
             Task.FromException<bool>(new Exception()).TryCatchAsync(failureValue: false).Result.ShouldBe(false);
         }
+
+        [TestMethod]
+        public void TryCatchTaskWithSuccessResultTest()
+        {
+            Task.CompletedTask.TryCatchAsync<bool>(true).Result.ShouldBe(true);
+            Task.FromException(new Exception()).TryCatchAsync(true).Result.ShouldBe(false);
+        }
+
+        [TestMethod]
+        public void TryCatchTaskNoResultTest()
+        {
+            _ = Task.CompletedTask.TryCatchAsync();
+            _ = Task.FromException(new Exception()).TryCatchAsync();
+        }
+
     }
 }

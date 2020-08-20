@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DotNet.Plus.Core;
 
 namespace DotNet.Plus.Collection
 {
@@ -32,27 +33,43 @@ namespace DotNet.Plus.Collection
         
         public static bool TryGetValueAtIndex<TItem>(this ICollection<TItem>? collection, object intIndexObj, out TItem item)
         {
-            if( collection == null || !(intIndexObj is int selectedIndex) )
+            try
+            {
+                if( collection == null)
+                    throw new ArgumentNullException(nameof(collection));
+
+                int selectedIndex = ConvertUnchecked.ToInt32(intIndexObj);
+                return collection.TryGetValueAtIndex(selectedIndex, out item);
+            }
+            catch
             {
                 #pragma warning disable CS8601 // Possible null reference assignment, currently no way to express this with templates in C# w/o defining TItem as a struct or class
                 item = default;
                 #pragma warning restore CS8601 // Possible null reference assignment, currently no way to express this with templates in C# w/o defining TItem as a struct or class
                 return false;
             }
-
-            return collection.TryGetValueAtIndex(selectedIndex, out item);
         }
 
-        public static void TryRemove<TItem>(this ICollection<TItem>? collection, TItem item)
+        /// <summary>
+        /// </summary>
+        /// <typeparam name="TItem"></typeparam>
+        /// <param name="collection"></param>
+        /// <param name="item"></param>
+        /// <returns>True is the item was removed or not found in the list.  Return false if there
+        /// was a problem such as the collection being a fixed size.</returns>
+        public static bool TryRemove<TItem>(this ICollection<TItem>? collection, TItem item)
         {
             try
             {
-                if( collection?.Contains(item) == true )
-                    collection.Remove(item);
+                if( collection == null )
+                    throw new ArgumentNullException(nameof(collection));
+
+                collection.Remove(item);
+                return true;
             }
             catch
             {
-                /* Ignored */
+                return false;
             }
         }
     }

@@ -11,15 +11,10 @@ namespace DotNet.Plus.Core
         /// <param name="cts">The token source to cancel</param>
         public static void TryCancel(this CancellationTokenSource? cts)
         {
-            try
-            {
+            Operation.TryCatch(() => {
                 if( cts != null && !cts.IsCancellationRequested )
                     cts.Cancel();
-            }
-            catch
-            {
-                /* Ignored */
-            }
+            });
         }
 
         /// <summary>
@@ -29,15 +24,10 @@ namespace DotNet.Plus.Core
         /// <param name="cts">CancellationTokenSource</param>
         public static void TryCancelAndDispose(this CancellationTokenSource? cts)
         {
-            try
-            {
+            Operation.TryCatch(() => {
                 cts?.TryCancel();
                 cts?.Dispose();
-            }
-            catch
-            {
-                /* ignored */
-            }
+            });
         }
     }
 }
