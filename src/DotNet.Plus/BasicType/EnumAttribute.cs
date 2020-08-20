@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using DotNet.Plus.Core;
 
 namespace DotNet.Plus.BasicType
 {
+    /// <summary>
+    /// Enum extensions to get the attributes associated with an enum such as [Description]
+    /// </summary>
     public static class EnumAttribute
     {
         /// <summary>
@@ -35,5 +39,16 @@ namespace DotNet.Plus.BasicType
                 return attributes;
             }, Enumerable.Empty<TAttribute>());
         }
+
+        public static bool TryGetDescription(this Enum instance, out string? description)
+        {
+            var attribute = instance.TryGetAttribute<DescriptionAttribute>();
+            description = attribute?.Description;
+            return description != null;
+        }
+
+        public static string? Description(this Enum instance)
+            => TryGetDescription(instance, out var description) ? description : instance.ToString();
+
     }
 }

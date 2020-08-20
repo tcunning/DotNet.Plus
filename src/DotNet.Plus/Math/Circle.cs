@@ -4,6 +4,9 @@ using static System.Math;
 
 namespace DotNet.Plus.Math
 {
+    /// <summary>
+    /// Math operations for circles
+    /// </summary>
     public static class Circle
     {
         /// <summary>

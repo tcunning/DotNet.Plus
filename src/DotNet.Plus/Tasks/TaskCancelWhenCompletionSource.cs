@@ -4,6 +4,10 @@ using System.Threading.Tasks;
 
 namespace DotNet.Plus.Tasks
 {
+    /// <summary>
+    /// Allows an existing TaskCompletionSource to be canceled when a given Cancellation Token is canceled or timed out when
+    /// a timeout time is reached.
+    /// </summary>
     public static class TaskCancelWhenCompletionSource
     {
         /// <summary>

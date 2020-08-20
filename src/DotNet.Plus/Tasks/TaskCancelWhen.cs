@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 
 namespace DotNet.Plus.Tasks
 {
+    /// <summary>
+    /// Creates a new task that can be canceled when a given Cancellation Token is canceled or a timeout time is reached
+    /// </summary>
     public static class TaskCancelWhen
     {
         /// <summary>

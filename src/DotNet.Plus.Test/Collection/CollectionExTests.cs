@@ -59,6 +59,7 @@ namespace DotNet.Plus.Collection.Tests
             list1.TryRemove(20).ShouldBe(true);
             list1.TryRemove(10).ShouldBe(true);
             list1.TryRemove(30).ShouldBe(true);
+            list1.TryRemove(30, true).ShouldBe(false);
         }
 
     }

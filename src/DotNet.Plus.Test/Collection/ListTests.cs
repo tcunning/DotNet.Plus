@@ -29,6 +29,10 @@ namespace DotNet.Plus.Test.Collection
             item4.ShouldBe(40);
 
             list.TryTakeFirst(out var item5).ShouldBe(false);
+
+            var fixedList = new byte[] { 10, 20, 30, 40 };
+            fixedList.TryTakeFirst(out var item6).ShouldBe(false);
+            fixedList.Length.ShouldBe(4);
         }
     }
 }

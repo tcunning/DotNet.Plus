@@ -10,7 +10,7 @@ namespace DotNet.Plus.Tasks.Tests
     public class TaskCancelWhenTests
     {
         [TestMethod]
-        [Timeout(100)]
+        [Timeout(5000)]
         public async Task CancelWhenWithResultImmediateTestAsync()
         {
             var tcs = new TaskCompletionSource<int>();
@@ -23,7 +23,7 @@ namespace DotNet.Plus.Tasks.Tests
 
 
         [TestMethod]
-        [Timeout(100)]
+        [Timeout(5000)]
         public void CancelWhenCanceledTestAsync()
         {
             var tcs = new TaskCompletionSource<int>();
@@ -35,7 +35,7 @@ namespace DotNet.Plus.Tasks.Tests
         }
 
         [TestMethod]
-        [Timeout(100)]
+        [Timeout(5000)]
         public void CancelWhenTimeoutTestAsync()
         {
             var tcs = new TaskCompletionSource<int>();
@@ -43,7 +43,7 @@ namespace DotNet.Plus.Tasks.Tests
         }
 
         [TestMethod]
-        [Timeout(100)]
+        [Timeout(5000)]
         public async Task CancelWhenWithResultTestAsync()
         {
             var tcs = new TaskCompletionSource<int>();
@@ -60,7 +60,7 @@ namespace DotNet.Plus.Tasks.Tests
         }
 
         [TestMethod]
-        [Timeout(100)]
+        [Timeout(5000)]
         public void CancelWhenExceptionTestAsync()
         {
             var tcs = new TaskCompletionSource<int>();
@@ -75,7 +75,7 @@ namespace DotNet.Plus.Tasks.Tests
         }
 
         [TestMethod]
-        [Timeout(100)]
+        [Timeout(5000)]
         public void CancelWhenTaskCanceledTestAsync()
         {
             var tcs = new TaskCompletionSource<int>();
@@ -90,7 +90,7 @@ namespace DotNet.Plus.Tasks.Tests
         }
 
         [TestMethod]
-        [Timeout(100)]
+        [Timeout(5000)]
         public void CancelWhenTaskNoneTestAsync()
         {
             var tcs = new TaskCompletionSource<int>();

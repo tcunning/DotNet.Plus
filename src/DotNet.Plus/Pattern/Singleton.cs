@@ -17,9 +17,9 @@ namespace DotNet.Plus.Pattern
     /// <para>Implements a reusable Singleton pattern.  TSingleton must define a private default constructor,
     /// otherwise a runtime exception will be thrown on construction of the singleton.</para>
     /// 
-    /// <para>The concept for this class was based on https://stackoverflow.com/questions/2319075/generic-singletont for the
-    /// reflection technique, and from Microsoft https://msdn.microsoft.com/en-us/library/ff650316.aspx for making it
-    /// thread safe.</para>
+    /// <para>The concept for this class was based on <seealso cref="https://stackoverflow.com/questions/2319075/generic-singletont"/>
+    /// for the reflection technique, and from Microsoft <seealso cref="https://msdn.microsoft.com/en-us/library/ff650316.aspx"/>
+    /// for making it thread safe.</para>
     ///
     /// <para>With this solution there is currently no way to validate that the derived class is the same type as the given
     /// TSingleton.  The Single is created solely based on the given TSingleton type.</para>
@@ -30,6 +30,10 @@ namespace DotNet.Plus.Pattern
         where TSingleton : Singleton<TSingleton>
     {
         private static volatile TSingleton? _instance;
+
+        /// <summary>
+        /// Returns the instance and creates it if it hasn't already been created in a thread safe way.  
+        /// </summary>
         public static TSingleton Instance
         {
             get
@@ -53,7 +57,11 @@ namespace DotNet.Plus.Pattern
             }
         }
 
-        public static bool HasPublicConstructor()
+        /// <summary>
+        /// Returns true if the singleton has a private constructor.  Public constructors aren't allowed in a singleton definition
+        /// </summary>
+        /// <returns>Returns true if the singleton has a private constructor</returns>
+        private static bool HasPublicConstructor()
         {
             var publicConstructors = typeof(TSingleton).GetConstructors(BindingFlags.Instance | BindingFlags.Public);
             return publicConstructors.Any();

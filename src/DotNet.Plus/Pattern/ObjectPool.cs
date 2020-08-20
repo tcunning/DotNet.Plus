@@ -93,6 +93,10 @@ namespace DotNet.Plus.Pattern
             _objectPool.Add(item);
         }
 
+        /// <summary>
+        /// Provides information about the object pool in a string useful for debugging
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return $"ObjectPool<{typeof(TObject).Name}>: Total Created {TotalCreated} Total Unused {CurrentInPool}";
