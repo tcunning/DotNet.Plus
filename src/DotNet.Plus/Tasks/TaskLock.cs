@@ -48,7 +48,7 @@ namespace DotNet.Plus.Tasks
             {
                 // If we don't have room in the queue then fail
                 //
-                if( _lockedTaskQueue.Count > MaxQueueSize ) 
+                if( _lockedTaskQueue.Count >= MaxQueueSize ) 
                     throw new IndexOutOfRangeException($"GetLock: failed because maximum queue Size of {MaxQueueSize} reached"); ;
 
                 // If we have no current lock then there is nothing queued so we can just go ahead get the lock now; otherwise,
@@ -57,6 +57,7 @@ namespace DotNet.Plus.Tasks
                 if( _currentLock == null ) {
                     _currentLock = serialLock;
                     _currentLock.GrantLock();
+                    _lockedTaskQueue.Add(serialLock);
                     return serialLock;
                 }
 
