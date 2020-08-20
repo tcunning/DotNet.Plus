@@ -37,24 +37,24 @@ namespace DotNet.Plus.Tasks.Tests
         {
             TaskLock lockQueue = new TaskLock(maxQueueSize: 100);
 
-            var continueTcs = new TaskCompletionSource<bool>();
-
+            var startTcs = new TaskCompletionSource<bool>();
+            var stopTcs = new TaskCompletionSource<bool>();
+            
             var task1 = Task.Run(async () => {
                 using( await lockQueue.GetLock(CancellationToken.None) )
                 {
-                    continueTcs.TrySetResult(true);
-                    await TaskDelay.TryDelay(10, CancellationToken.None);
+                    startTcs.TrySetResult(true);
+                    await stopTcs.Task;
                 }
             });
 
-            await continueTcs.Task;
-
             try
             {
+                await startTcs.Task;
+
                 using var preCts = new CancellationTokenSource();
                 preCts.Cancel();
-                using (await lockQueue.GetLock(preCts.Token))
-                {
+                using (await lockQueue.GetLock(preCts.Token)) {
                     Assert.Fail(); // We should not get here!
                 }
             }
@@ -63,9 +63,10 @@ namespace DotNet.Plus.Tasks.Tests
                 ex.ShouldBeOfType<TaskCanceledException>();
             }
 
+            stopTcs.TrySetResult(true);
+
             using( await lockQueue.GetLock(CancellationToken.None) )
             {
-                await TaskDelay.TryDelay(2, CancellationToken.None);
             }
 
             await task1;
@@ -76,22 +77,22 @@ namespace DotNet.Plus.Tasks.Tests
         public async Task GetLockTest3Async()
         {
             TaskLock lockQueue = new TaskLock(maxQueueSize: 100);
-            var continueTcs = new TaskCompletionSource<bool>();
+            var startTcs = new TaskCompletionSource<bool>();
+            var stopTcs = new TaskCompletionSource<bool>();
 
-            var task1 = Task.Run(async () =>
+            _ = Task.Run(async () =>
             {
                 using( await lockQueue.GetLock(CancellationToken.None) )
                 {
-                    continueTcs.TrySetResult(true);
-                    await TaskDelay.TryDelay(20, CancellationToken.None);
+                    startTcs.TrySetResult(true);
+                    await stopTcs.Task;
                 }
             });
 
-            await continueTcs.Task;
-
             try
             {
-                using (await lockQueue.GetLock(CancellationToken.None, TimeSpan.FromMilliseconds(1)))
+                await startTcs.Task;
+                using( await lockQueue.GetLock(CancellationToken.None, TimeSpan.FromMilliseconds(1)))
                 {
                     Assert.Fail(); // We should not get here!
                 }
@@ -101,7 +102,7 @@ namespace DotNet.Plus.Tasks.Tests
                 ex.ShouldBeOfType<TaskCanceledException>();
             }
 
-            await task1;
+            stopTcs.TrySetResult(true);
         }
 
         [TestMethod]
@@ -110,21 +111,21 @@ namespace DotNet.Plus.Tasks.Tests
         {
             TaskLock lockQueue = new TaskLock(maxQueueSize: 1);
 
-            var continueTcs = new TaskCompletionSource<bool>();
+            var startTcs = new TaskCompletionSource<bool>();
+            var stopTcs = new TaskCompletionSource<bool>();
 
-            var task1 = Task.Run(async () =>
+            _ = Task.Run(async () =>
             {
                 using( await lockQueue.GetLock(CancellationToken.None) )
                 {
-                    continueTcs.TrySetResult(true);
-                    await TaskDelay.TryDelay(80, CancellationToken.None);
+                    startTcs.TrySetResult(true);
+                    await stopTcs.Task;
                 }
             });
 
-            await continueTcs.Task;
-
             try
             {
+                await startTcs.Task;
                 using( await lockQueue.GetLock(CancellationToken.None) )
                 {
                     Assert.Fail(); // We should not get here!
@@ -135,7 +136,7 @@ namespace DotNet.Plus.Tasks.Tests
                 ex.ShouldBeOfType<IndexOutOfRangeException>();
             }
 
-            await task1;
+            stopTcs.SetResult(true);
         }
 
     }
