@@ -3,6 +3,9 @@ using System.Threading;
 
 namespace DotNet.Plus.Core
 {
+    /// <summary>
+    /// Adds extensions to CancellationTokenSource such as for allowing easy cancel and dispose
+    /// </summary>
     public static class CancellationTokenSourceEx
     {
         /// <summary>

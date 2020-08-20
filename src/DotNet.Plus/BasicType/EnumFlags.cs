@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Dynamic;
-using System.Runtime.CompilerServices;
 
 namespace DotNet.Plus.BasicType
 {
+    /// <summary>
+    /// Enum extensions for working with [FLAG] enums such as being able to set and clear flags
+    /// </summary>
     public static class EnumFlags
     {
         // Will clear or set the given flags based on setFlags. If setFlags are true then all the given flags will be set,
@@ -59,6 +60,15 @@ namespace DotNet.Plus.BasicType
             }
         }
 
+        /// <summary>
+        /// Returns the given enumFlags with the specified clearFlags removed.  The enum must be
+        /// attributed as a Flags enum
+        /// </summary>
+        /// <typeparam name="TEnum">The type of the enum</typeparam>
+        /// <param name="enumFlags">The enum who's flags are to be set</param>
+        /// <param name="clearFlags">The flags to clear from the given enumFlags</param>
+        /// <returns>The given enumFlags with the clearFlags removed</returns>
+        /// <exception cref="ArgumentException">Unable to covert the given enum to a support Integer type</exception>
         public static TEnum ClearFlag<TEnum>(this TEnum enumFlags, TEnum clearFlags)
             where TEnum : Enum
         {

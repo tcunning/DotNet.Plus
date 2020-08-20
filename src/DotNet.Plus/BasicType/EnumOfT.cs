@@ -7,9 +7,9 @@ using System.Linq;
 namespace DotNet.Plus.BasicType
 {
     /// <summary>
-    /// A set of useful operations that can be performed on enum values.
+    /// A set of operations that can be performed on enum values.
     /// </summary>
-    /// <typeparam name="TEnum"></typeparam>
+    /// <typeparam name="TEnum">The Type of enum</typeparam>
     public static partial class Enum<TEnum>
         where TEnum : Enum
     {

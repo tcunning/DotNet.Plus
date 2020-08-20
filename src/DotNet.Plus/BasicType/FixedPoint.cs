@@ -5,9 +5,15 @@ using static DotNet.Plus.BasicType.Byte;
 namespace DotNet.Plus.BasicType
 {
     /// <summary>
-    /// A fixed-point number is an integer that represents a rational, float or double, value.  To convert to/from the
-    /// fixed-point number a scale factor is applied.
+    /// <para>A fixed-point number is an integer that represents a rational, float or double, value.  To convert to/from the
+    /// fixed-point number a scale factor is applied.</para>
+    /// 
+    /// <para>This implementation supports up to 63 bit fixed-point values.  However, loss of precision can happen when
+    /// converting to/from floats and doubles.  This implementation will throw overflow exceptions when it is unable
+    /// to perform the conversion within known limits.  However, the float/double will lose precision if the fixed-point
+    /// number is too big/small. </para>
     ///
+    /// <para><code>
     ///       fixedPoint =  realNumber * scale
     ///       realNumber =  fixedPoint / scale
     /// 
@@ -15,15 +21,10 @@ namespace DotNet.Plus.BasicType
     ///     --------   ---------   ----------   ---------------  ---------------
     ///     4.8         4 bits      8 bits      2^8   =  256        2   
     ///     8.8         8           8           2^8   =  256        2
-    ///     16.16       16         16           2^16  =  65536      4
-    ///
-    /// This implementation supports up to 63 bit fixed-point values.  However, loss of precision can happen when
-    /// converting to/from floats and doubles.  This implementation will throw overflow exceptions when it is unable
-    /// to perform the conversion within known limits.  However, the float/double will lose precision if the fixed-point
-    /// number is too big/small.
-    ///
-    /// This implementation supports fixed point operations of all signed and unsigned integer types, and it supports
-    /// float and double rational numbers.
+    ///     16.16       16         16           2^16  =  65536      4</code></para>
+    /// 
+    /// <para>This implementation supports fixed point operations of all signed and unsigned integer types, and it supports
+    /// float and double rational numbers.</para>
     /// </summary>
     public static class FixedPoint
     {

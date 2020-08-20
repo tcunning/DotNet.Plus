@@ -3,8 +3,14 @@ using DotNet.Plus.Endian;
 
 namespace DotNet.Plus.BasicType
 {
+    /// <summary>
+    /// Extensions to work with GUIDs
+    /// </summary>
     public static class GuidUtil
     {
+        /// <summary>
+        /// Required size of a GUID
+        /// </summary>
         public const int GuidSize = 16;
 
         /// <summary>

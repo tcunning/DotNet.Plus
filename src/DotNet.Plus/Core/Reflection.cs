@@ -3,6 +3,9 @@ using System.Reflection;
 
 namespace DotNet.Plus.Core
 {
+    /// <summary>
+    /// Adds extensions to Reflection to make it easier to get method get/set properties, etc
+    /// </summary>
     public static class Reflection
     {
         /// <summary>
@@ -146,6 +149,5 @@ namespace DotNet.Plus.Core
 
             field.SetValue(instance, value);
         }
-
     }
 }
