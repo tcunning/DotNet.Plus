@@ -1,12 +1,17 @@
 ﻿using System;
+using System.Net.Http.Headers;
 
 namespace DotNet.Plus.BasicType
 {
+    /// <inheritdoc cref="BitField{TValue}"/>
     public interface IBitField<TValue> : IBitField<TValue, TValue>
         where TValue : struct, IConvertible
     {
     }
     
+    /// <summary>
+    /// </summary>
+    /// <typeparam name="TValue"></typeparam>
     public readonly struct BitField<TValue> : IBitField<TValue>
         where TValue : struct, IConvertible
     {
@@ -28,4 +33,5 @@ namespace DotNet.Plus.BasicType
 
         public TValue Encode(TValue value, TValue container) => _bitfield.Encode(value, container);
     }
+
 }

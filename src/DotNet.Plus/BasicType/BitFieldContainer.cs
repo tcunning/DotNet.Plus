@@ -3,6 +3,7 @@ using DotNet.Plus.Core;
 
 namespace DotNet.Plus.BasicType
 {
+    /// <inheritdoc cref="BitField{TValue, TContainer}"/>
     public interface IBitField<TValue, TContainer>
         where TValue : struct, IConvertible
         where TContainer : struct, IConvertible
@@ -49,10 +50,13 @@ namespace DotNet.Plus.BasicType
 
         private static byte ContainerMaxBits => (byte)(sizeof(UInt64) * Byte.BitsInByte);
 
-        private BitField((byte numBits, int startBitOffset) bitmapInfo)
+        private BitField((byte numBits, int startBitOffset) bitmask)
         {
-            var numBits = bitmapInfo.numBits;
-            var startBitOffset = bitmapInfo.startBitOffset;
+            if( bitmask.startBitOffset < 0 )
+                throw new ArgumentOutOfRangeException(nameof(bitmask.startBitOffset), bitmask.startBitOffset, $"Must be greater then or equal to 0");
+
+            var numBits = bitmask.numBits;
+            var startBitOffset = bitmask.startBitOffset;
 
             var maxValueBits = IntegerDefinition<TValue>.Size * Byte.BitsInByte;
             var containerUsedBits = IntegerDefinition<TContainer>.Size * Byte.BitsInByte;
@@ -80,42 +84,46 @@ namespace DotNet.Plus.BasicType
         {
         }
         
-        public BitField(TValue bitmask) : this(ParseBitmask(bitmask))
+        public BitField(TContainer bitmask) : this(ParseBitmask(bitmask))
         {
         }
 
-        public static (byte numBits, int startBitOffset) ParseBitmask(TValue bitmask)
+        public static (byte numBits, int startBitOffset) ParseBitmask(TContainer bitmask)
         {
+            var maxContainerBits = IntegerDefinition<TContainer>.Size * Byte.BitsInByte;
             var maxBits = IntegerDefinition<TValue>.Size * Byte.BitsInByte;
             byte bitsToRight = 0;
             byte numBits = 0;
             bool completedBitmask = false;
             UInt64 container = ConvertUnchecked.ChangeType<UInt64>(bitmask);
-            for( int index = 0; index < maxBits; index += 1, container >>= 1 )
+            for( int index = 0; index < maxContainerBits; index += 1, container >>= 1 )
             {
                 if( (container & 0x01ul) != 0 )
                 {
                     if( completedBitmask )
-                        throw new ArgumentOutOfRangeException(nameof(bitmask), bitmask, $"One a single consecutive set of bits is allowed to be set in the bitmask.");
+                        throw new ArgumentOutOfRangeException(nameof(bitmask), bitmask, $"Only a single consecutive set of bits is allowed to be set in the bitmask.");
                     numBits += 1;
                 }
                 else
                 {
                     if( numBits > 0 ) {
-                        if( completedBitmask )
-                            throw new ArgumentOutOfRangeException(nameof(bitmask), bitmask, $"One a single consecutive set of bits is allowed to be set in the bitmask.");
                         completedBitmask = true;  // But we keep checking in order to validate the given bitmask is in the correct form
                         continue;
                     }
 
                     bitsToRight += 1;
                 }
+
+                if( numBits > maxBits )
+                    throw new ArgumentOutOfRangeException(nameof(bitmask), bitmask, $"Too many bits set in the bitmask, the value can contain up to {maxBits}");
             }
 
-            var startBitOffset = maxBits - bitsToRight - numBits;
+            var startBitOffset = maxContainerBits - bitsToRight - numBits;
             return (numBits, startBitOffset);
         }
-        
+
+        //public static BitField<TValue, TContainer> MakeFromBitmask(TContainer bitmask) => new BitField<TValue, TContainer>(bitmask);
+
         public TValue Decode(TContainer container)
         {
             var containerValue = ConvertUnchecked.ChangeType<UInt64>(container);

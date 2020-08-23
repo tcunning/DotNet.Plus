@@ -54,6 +54,7 @@ namespace DotNet.Plus.Test.BasicType
         {
             Should.Throw<ArgumentOutOfRangeException>(() => new BitField<byte, ushort>(9, startBitOffset: 0));
             Should.Throw<ArgumentOutOfRangeException>(() => new BitField<byte, ushort>(8, startBitOffset: 9));
+            Should.Throw<ArgumentOutOfRangeException>(() => new BitField<byte, ushort>(4, startBitOffset: -1));
         }
 
         [TestMethod]
