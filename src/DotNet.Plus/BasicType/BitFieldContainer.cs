@@ -16,7 +16,7 @@ namespace DotNet.Plus.BasicType
     /// <summary>
     /// A BitFieldContainer allows a sequence of bits to be identified within a container that is the same
     /// size or larger then the bit sequence.  A value can then be encoded into or out of the sequence of
-    /// bits and the BitFieldContainer will take care of all the necessary shifting. 
+    /// bits and the BitFieldContainer will take care of all the necessary masking and shifting. 
     /// <code>
     ///     // Define a value that is 4 bits and will be placed in a byte.
     ///     // The container is 16 bits and the value is in the 2nd nibble
@@ -26,10 +26,10 @@ namespace DotNet.Plus.BasicType
     ///     bitField.Decode(0b0000_0000_1001_0000);           // Returns a value of 0b0000_1010
     /// </code>
     /// </summary>
-    /// <typeparam name="TValue">This must be an integer type and the number of bits specified in the specified
+    /// <typeparam name="TValue">An integer type that will be used to hold the encoded/decoded value.  
     /// BitMask must fit within this type size.</typeparam>
-    /// <typeparam name="TContainer">This must be an integer type and the number of bits specified in the specified
-    /// BitMask must fit within this type size.</typeparam>
+    /// <typeparam name="TContainer">An integer type that will be used as the source/destination of the
+    /// decoded/encoded value.</typeparam>
     public readonly struct BitField<TValue, TContainer>
         where TValue : struct, IConvertible
         where TContainer : struct, IConvertible
