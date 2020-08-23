@@ -88,7 +88,7 @@ namespace DotNet.Plus.BasicType
         {
         }
 
-        public static (byte numBits, int startBitOffset) ParseBitmask(TContainer bitmask)
+        internal static (byte numBits, int startBitOffset) ParseBitmask(TContainer bitmask)
         {
             var maxContainerBits = IntegerDefinition<TContainer>.Size * Byte.BitsInByte;
             var maxBits = IntegerDefinition<TValue>.Size * Byte.BitsInByte;
@@ -121,8 +121,6 @@ namespace DotNet.Plus.BasicType
             var startBitOffset = maxContainerBits - bitsToRight - numBits;
             return (numBits, startBitOffset);
         }
-
-        //public static BitField<TValue, TContainer> MakeFromBitmask(TContainer bitmask) => new BitField<TValue, TContainer>(bitmask);
 
         public TValue Decode(TContainer container)
         {
