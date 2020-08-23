@@ -15,7 +15,7 @@ namespace DotNet.Plus.Test.BasicType
         {
             Integer<uint> test = uint.MaxValue;
             Integer<uint> test2 = new Integer<uint>(test);
-            Integer<UInt16> test3 = 0x1234;
+            Integer<UInt16> test3 = Integer<UInt16>.MakeInteger(0x1234);
             Integer<UInt16> test4 = new Integer<UInt16>(test3);
 
             test.Value.ShouldBe(uint.MaxValue);

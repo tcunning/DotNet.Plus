@@ -35,6 +35,8 @@ namespace DotNet.Plus.BasicType
             Value = value;
         }
 
+        public static Integer<TBackingType> MakeInteger(TBackingType value) => new Integer<TBackingType>(value);
+
         #region From Integer to Native Integer type
         /// <summary>
         /// Implicit unchecked conversion from Integer{TBackingType} to specified system integer type.
@@ -87,4 +89,6 @@ namespace DotNet.Plus.BasicType
         public static implicit operator Integer<TBackingType>(Enum value) => new Integer<TBackingType>(ConvertUnchecked.ChangeType<TBackingType>(value));
         #endregion
     }
+
+    
 }

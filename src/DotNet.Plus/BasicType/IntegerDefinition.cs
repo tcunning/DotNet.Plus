@@ -2,6 +2,18 @@
 
 namespace DotNet.Plus.BasicType
 {
+    public enum TypeCodeInteger
+    {
+        SByte = TypeCode.SByte,
+        Int16 = TypeCode.Int16,
+        Int32 = TypeCode.Int32,
+        Int64 = TypeCode.Int64,
+        Byte = TypeCode.Byte,
+        UInt16 = TypeCode.UInt16,
+        UInt32 = TypeCode.UInt32,
+        UInt64 = TypeCode.UInt64,
+    }
+    
     /// <summary>
     /// Defines what system types ARE Integers  This is useful for generic types that only work with integer
     /// values.
@@ -15,6 +27,12 @@ namespace DotNet.Plus.BasicType
         /// </summary>
         /// ReSharper disable once StaticMemberInGenericType (this is exactly what we want!)
         public static readonly TypeCode TypeCode;
+
+        /// <summary>
+        /// The cached system TypeCode of the integer
+        /// </summary>
+        /// ReSharper disable once StaticMemberInGenericType (this is exactly what we want!)
+        public static readonly TypeCodeInteger TypeCodeInteger;
 
         /// <summary>
         /// The size of the integer in bytes, this is useful as generic classes can't get the
@@ -45,6 +63,7 @@ namespace DotNet.Plus.BasicType
         static IntegerDefinition()
         {
             TypeCode = System.Type.GetTypeCode(typeof(TIntegerValue));
+            TypeCodeInteger = (TypeCodeInteger)TypeCode;
             switch( TypeCode )
             {
                 case TypeCode.SByte:
