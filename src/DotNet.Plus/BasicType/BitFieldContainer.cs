@@ -12,37 +12,32 @@ namespace DotNet.Plus.BasicType
         TValue Decode(TContainer container);
         TContainer Encode(TValue value, TContainer container);
     }
-    
+
     /// <summary>
-    /// Terminology: 
+    /// A BitFieldContainer allows a sequence of bits to be identified within a container that is the same
+    /// size or larger then the bit sequence.  A value can then be encoded into or out of the sequence of
+    /// bits and the BitFieldContainer will take care of all the necessary shifting. 
     /// <code>
-    ///     Byte Index:         Byte 0   Byte 1      Bit
-    ///     Bit Order In Byte: 76543210 76543210    Offset
-    ///                        |||||||| ||||||||    ======
-    ///                        |||||||| |||||||\__    15  
-    ///                        |||||||| ||||||\___    14
-    ///                        |||||||| |||||\____    13
-    ///                        |||||||| ||||\_____    12
-    ///                        |||||||| |||\______    11
-    ///                        |||||||| ||\_______    10
-    ///                        |||||||| |\________    09
-    ///                        |||||||| \_________    08
-    ///                        |||||||\___________    07 
-    ///                        ||||||\____________    06
-    ///                        |||||\_____________    05
-    ///                        ||||\______________    04
-    ///                        |||\_______________    03
-    ///                        ||\________________    02
-    ///                        |\_________________    01
-    ///                        \__________________    00
+    ///     // Define a value that is 4 bits and will be placed in a byte.
+    ///     // The container is 16 bits and the value is in the 2nd nibble
+    ///     var bitField = new BitField{byte, UInt16}(0b0000_0000_1111_0000);
+    ///
+    ///     bitField.Encode(0b1010, 0b0000_0000_0000_0000);   // Returns a value of 0b0000_0000_1010_0000
+    ///     bitField.Decode(0b0000_0000_1001_0000);           // Returns a value of 0b0000_1010
     /// </code>
     /// </summary>
-    /// <typeparam name="TValue"></typeparam>
-    /// <typeparam name="TContainer"></typeparam>
+    /// <typeparam name="TValue">This must be an integer type and the number of bits specified in the specified
+    /// BitMask must fit within this type size.</typeparam>
+    /// <typeparam name="TContainer">This must be an integer type and the number of bits specified in the specified
+    /// BitMask must fit within this type size.</typeparam>
     public readonly struct BitField<TValue, TContainer>
         where TValue : struct, IConvertible
         where TContainer : struct, IConvertible
     {
+        /// <summary>
+        /// This is the Bitmask that's used to represent where the value will be located within the context of the
+        /// TContainer.
+        /// </summary>
         public TContainer Bitmask => ConvertUnchecked.ChangeType<TContainer>(_bitmask);
  
         private readonly UInt64 _bitmask;
@@ -79,11 +74,46 @@ namespace DotNet.Plus.BasicType
                 _bitmask >>= ContainerMaxBits - containerUsedBits;
             }
         }
-        
+
+        /// <summary>
+        /// Creates a BitField with the given number of bits starting at the given startBitOffset.  For example:
+        /// <code>
+        ///     var bitField = new BitField{byte, UInt16}(3, 1);   // Would have a bitmask of 0b0111_0000_0000_0000
+        /// </code>
+        /// </summary>
+        /// <param name="numBits">The number of bits used for the value</param>
+        /// <param name="startBitOffset">A zero based index from the left most bit representing the start of the value.
+        /// <code>
+        ///                                              Bit 
+        ///     Bit Order In Byte: 76543210 76543210    Offset
+        ///                        |||||||| ||||||||    ======
+        ///                        |||||||| |||||||\__    15  
+        ///                        |||||||| ||||||\___    14
+        ///                        |||||||| |||||\____    13
+        ///                        |||||||| ||||\_____    12
+        ///                        |||||||| |||\______    11
+        ///                        |||||||| ||\_______    10
+        ///                        |||||||| |\________    09
+        ///                        |||||||| \_________    08
+        ///                        |||||||\___________    07 
+        ///                        ||||||\____________    06
+        ///                        |||||\_____________    05
+        ///                        ||||\______________    04
+        ///                        |||\_______________    03
+        ///                        ||\________________    02
+        ///                        |\_________________    01
+        ///                        \__________________    00
+        /// </code>
+        /// </param>
         public BitField(byte numBits, int startBitOffset) : this((numBits, startBitOffset))
         {
         }
-        
+
+        /// <summary>
+        /// Creates BitField with the given bitmask.  
+        /// </summary>
+        /// <param name="bitmask">The bitmask must contain 0 or more sequential bits starting anywhere within
+        /// the container.  There can only be ONE set of bits.  <c>For example 0b1100_0011 would be invalid.</c></param>
         public BitField(TContainer bitmask) : this(ParseBitmask(bitmask))
         {
         }
@@ -122,6 +152,18 @@ namespace DotNet.Plus.BasicType
             return (numBits, startBitOffset);
         }
 
+        /// <summary>
+        /// Decodes a value that fits within TValue from the given container.
+        /// <code>
+        ///     // Define a value that is 4 bits and will be placed in a byte.
+        ///     // The container is 16 bits and the value is in the 2nd nibble
+        ///     var bitField = new BitField{byte, UInt16}(0b0000_0000_1111_0000);
+        ///
+        ///     bitField.Decode(0b0000_0000_1001_0000);  // Returns a value of 0b0000_1010
+        /// </code>
+        /// </summary>
+        /// <param name="container">The value is read from the container according to the BitField's bitmask as shifted appropriately</param>
+        /// <returns></returns>
         public TValue Decode(TContainer container)
         {
             var containerValue = ConvertUnchecked.ChangeType<UInt64>(container);
@@ -129,6 +171,19 @@ namespace DotNet.Plus.BasicType
             return ConvertUnchecked.ChangeType<TValue>(decodeValue);
         }
 
+        /// <summary>
+        /// Decodes a value that fits within TValue from the given container.
+        /// <code>
+        ///     // Define a value that is 4 bits and will be placed in a byte.
+        ///     // The container is 16 bits and the value is in the 2nd nibble
+        ///     var bitField = new BitField{byte, UInt16}(0b0000_0000_1111_0000);
+        /// 
+        ///     bitField.Encode(0b1010, 0b0000_0000_0000_0000);   // Returns a value of 0b0000_0000_1010_0000
+        /// </code>
+        /// </summary>
+        /// <param name="value">The value to be sifted and placed into the container according to BitField's bitmask</param>
+        /// <param name="container">The value is applied to the container according to the BitField's bitmask as shifted appropriately</param>
+        /// <returns>The original container with the value encoded into the appropriate place defined by the BitField's bitmask</returns>
         public TContainer Encode(TValue value, TContainer container)
         {
             var valueContainer = ConvertUnchecked.ChangeType<UInt64>(value);
