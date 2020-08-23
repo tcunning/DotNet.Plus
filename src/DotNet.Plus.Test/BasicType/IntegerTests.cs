@@ -13,6 +13,12 @@ namespace DotNet.Plus.Test.BasicType
         [TestMethod]
         public void BasicTest()
         {
+            Integer<bool> testBool = true;
+            ((bool)testBool).ShouldBe(true);
+
+            Integer<bool> testBool2 = false;
+            ((bool)testBool2).ShouldBe(false);
+            
             Integer<uint> test = uint.MaxValue;
             Integer<uint> test2 = new Integer<uint>(test);
             Integer<UInt16> test3 = Integer<UInt16>.MakeInteger(0x1234);

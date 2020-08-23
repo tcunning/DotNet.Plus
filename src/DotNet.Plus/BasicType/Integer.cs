@@ -42,6 +42,8 @@ namespace DotNet.Plus.BasicType
         /// Implicit unchecked conversion from Integer{TBackingType} to specified system integer type.
         /// </summary>
         /// <param name="integer">The Integer to convert</param>
+        public static implicit operator bool(Integer<TBackingType> integer) => ConvertUnchecked.ChangeType<bool>(integer.Value);
+
         public static implicit operator sbyte(Integer<TBackingType> integer) => ConvertUnchecked.ChangeType<sbyte>(integer.Value);
 
         /// <inheritdoc cref="implicit operator sbyte(Integer{TBackingType})"/>
@@ -78,6 +80,7 @@ namespace DotNet.Plus.BasicType
         #endregion
 
         #region From Native type to Integer
+        public static implicit operator Integer<TBackingType>(bool value) => new Integer<TBackingType>(ConvertUnchecked.ChangeType<TBackingType>(value));
         public static implicit operator Integer<TBackingType>(sbyte value) => new Integer<TBackingType>(ConvertUnchecked.ChangeType<TBackingType>(value));
         public static implicit operator Integer<TBackingType>(Int16 value) => new Integer<TBackingType>(ConvertUnchecked.ChangeType<TBackingType>(value));
         public static implicit operator Integer<TBackingType>(Int32 value) => new Integer<TBackingType>(ConvertUnchecked.ChangeType<TBackingType>(value));
