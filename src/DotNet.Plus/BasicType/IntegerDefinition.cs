@@ -4,6 +4,7 @@ namespace DotNet.Plus.BasicType
 {
     public enum TypeCodeInteger
     {
+        Boolean = TypeCode.Boolean,
         SByte = TypeCode.SByte,
         Int16 = TypeCode.Int16,
         Int32 = TypeCode.Int32,
@@ -66,6 +67,11 @@ namespace DotNet.Plus.BasicType
             TypeCodeInteger = (TypeCodeInteger)TypeCode;
             switch( TypeCode )
             {
+                case TypeCode.Boolean:
+                    Size = sizeof(bool);
+                    IsSigned = false;
+                    break;
+
                 case TypeCode.SByte:
                     Size = sizeof(sbyte);
                     IsSigned = true;
