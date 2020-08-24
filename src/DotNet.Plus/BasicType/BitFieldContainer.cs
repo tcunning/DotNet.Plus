@@ -8,8 +8,13 @@ namespace DotNet.Plus.BasicType
         where TValue : struct, IConvertible
         where TContainer : struct, IConvertible
     {
+        /// <inheritdoc cref="BitField{TValue, TContainer}.Bitmask"/>
         public TContainer Bitmask { get; }
+
+        /// <inheritdoc cref="BitField{TValue, TContainer}.Decode(TContainer)"/>
         TValue Decode(TContainer container);
+
+        /// <inheritdoc cref="BitField{TValue, TContainer}.Decode(TValue, TContainer)"/>
         TContainer Encode(TValue value, TContainer container);
     }
 
