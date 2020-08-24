@@ -1,4 +1,6 @@
 ﻿using System;
+using DotNet.Plus.BasicType;
+using Byte = System.Byte;
 
 namespace DotNet.Plus.Core
 {
@@ -92,7 +94,6 @@ namespace DotNet.Plus.Core
             where TConversion : struct, IConvertible => 
             (TConversion)ChangeType(value, Type.GetTypeCode(typeof(TConversion)))!;
 
-
         #region Boolean
         public static bool ToBoolean(object valueObject)
         {
@@ -115,7 +116,7 @@ namespace DotNet.Plus.Core
                     throw new ArgumentException($"Unable to convert {valueObject.GetType().Name} to {nameof(Boolean)}", nameof(valueObject));
             }
         }
-
+        
         public static bool ToBoolean(bool value) => value;
         public static bool ToBoolean(byte value) => value != 0;
         public static bool ToBoolean(decimal value) => value != 0;
