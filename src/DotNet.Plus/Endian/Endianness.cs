@@ -167,12 +167,14 @@ namespace DotNet.Plus.Endian
         /// </summary>
         /// <param name="value">The value that is to be written to the given buffer in the specified <see cref="Endianness"/></param>
         /// <param name="numBytes">The number of bytes, up to a maximum of 8, to write to the buffer.</param>
-        /// <param name="buffer">The destination buffer identified by the given ArraySegment.  There must be at least numBytes bytes
-        /// of space available in the buffer.</param>
+        /// <param name="buffer">The destination buffer identified by the given IList{Byte} which can be an ArraySegment, Array, etc.  There
+        /// must be at least numBytes bytes of space available in the buffer.</param>
+        /// <param name="startOffset">Starting offset from start of the given buffer</param>
         /// <param name="endian">The data will be written to the buffer in this <see cref="Endianness"/>.</param>
         /// <returns>The passed in buffer, this allows for call chaining to other operations.</returns>
         /// <exception cref="ArgumentOutOfRangeException">If unable to write data into the buffer</exception>
-        public static ArraySegment<byte> ToBuffer(this UInt64 value, int numBytes, ArraySegment<byte> buffer, EndianFormat endian = EndianFormat.Big)
+        public static TList ToBuffer<TList>(this UInt64 value, int numBytes, TList buffer, int startOffset = 0, EndianFormat endian = EndianFormat.Big)
+            where TList : IList<byte>
         {
             if( numBytes == 0 )
                 return buffer;
@@ -201,12 +203,12 @@ namespace DotNet.Plus.Endian
             //    7     buffer[0]     56     0xFF00000000000000   buffer[7]
             var bitMask = (UInt64)0xFF;   // This needs to be cast or it will default to a smaller size
             var shift = 0;
-            var bufferIndex = buffer.Offset + (endian == EndianFormat.Big ? numBytes - 1 : 0);
+            var bufferIndex = startOffset + (endian == EndianFormat.Big ? numBytes - 1 : 0);
             var bufferIndexInc = endian == EndianFormat.Big ? -1 : 1;
             for( var index = 0; index < numBytes; index += 1, bitMask <<= BitsInByte, shift += BitsInByte, bufferIndex += bufferIndexInc )
             {
                 UInt64 maskedData = value & bitMask;
-                buffer.Array[bufferIndex] = (byte)(maskedData >> shift);
+                buffer[bufferIndex] = (byte)(maskedData >> shift);
             }
 
             return buffer;

@@ -72,5 +72,13 @@ namespace DotNet.Plus.Test.BasicType
             Should.Throw<ArgumentOutOfRangeException>(() => new BitField<byte>(0b0101_1100));
         }
 
+        [TestMethod]
+        public void BitFieldSameContainerTest()
+        {
+            var test = new BitField<byte>(4, startBitOffset: 0);
+            test.Bitmask.ShouldBe<byte>(0b1111_0000);
+
+        }
+
     }
 }
