@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Net.Http.Headers;
 
 namespace DotNet.Plus.BasicType
 {
@@ -85,7 +88,8 @@ namespace DotNet.Plus.BasicType
         /// </summary>
         /// <param name="bitmask">The bitmask must contain none or at most 1 bit set.</param>
         /// <returns>A BitFieldBoolean that matches the given bitmask</returns>
-        public static BitFieldBoolean<TContainer> MakeFromBitmask(TContainer bitmask) => new BitFieldBoolean<TContainer>(GetBitPositionFromBitmask(bitmask));
+        public static BitFieldBoolean<TContainer> MakeFromBitmask(TContainer bitmask) => 
+            new BitFieldBoolean<TContainer>(GetBitPositionFromBitmask(bitmask));
 
         private static int GetBitPositionFromBitmask(TContainer bitmask)
         {
@@ -101,11 +105,34 @@ namespace DotNet.Plus.BasicType
         /// <inheritdoc cref="BitField{TContainer}.Decode(TContainer)"/>
         public bool Decode(TContainer container) => _bitField.Decode(container);
 
+        public bool Decode(IList<byte> buffer, int offset = 0)
+        {
+            // todo: need to add in check for an empty bitmask...
+            // todo: Should the TContainer be taken away as it should always be a bit for a bitfield?
+            // todo: if we keep the TContainer do we take into account the endeness?
+
+            var byteOffset = _bitField.StartBitOffset / Byte.BitsInByte;
+            var bitShift = (_bitField.StartBitOffset % Byte.BitsInByte);
+            var byteBitmask = 0b1000_0000 >> bitShift;
+            return (buffer[offset + byteOffset] & byteBitmask) != 0;
+        }
+
         /// <inheritdoc cref="BitField{TValue, TContainer}.Encode(TValue, TContainer)"/>
         public TContainer Encode(bool value, TContainer container) => _bitField.Encode(value, container);
 
+        public void Encode(bool value, IList<byte> buffer, int offset = 0)
+        {
+            var byteOffset = _bitField.StartBitOffset / Byte.BitsInByte;
+            var byteBitmask = (byte)(0b1000_0000 >> (_bitField.StartBitOffset % Byte.BitsInByte));
+            var index = offset + byteOffset;
+            if (value)
+                buffer[index] |= byteBitmask;
+            else
+                buffer[index] &= (byte)~byteBitmask;
+        }
+
         /// <summary>
-        /// Tests to see if the flag is set within the given containter
+        /// Tests to see if the flag is set within the given container
         /// </summary>
         /// <param name="container">The container</param>
         /// <returns>True if the bit is set within the container</returns>

@@ -44,7 +44,17 @@ namespace DotNet.Plus.BasicType
         /// TContainer.
         /// </summary>
         public TContainer Bitmask => ConvertUnchecked.ChangeType<TContainer>(_bitmask);
- 
+
+        /// <summary>
+        /// A zero based index counting the number of bites to the left of the set bit within the context of the
+        /// TContainer.
+        /// <code>
+        /// For Example:
+        ///      0b0000_0110 would have a StartBitOffset of 5
+        /// </code>
+        /// </summary>
+        public byte StartBitOffset { get; }
+
         private readonly UInt64 _bitmask;
         private readonly byte _valueBitsToRight;
 
@@ -78,6 +88,8 @@ namespace DotNet.Plus.BasicType
                 _bitmask >>= startBitOffset;
                 _bitmask >>= ContainerMaxBits - containerUsedBits;
             }
+
+            StartBitOffset = (byte)startBitOffset;
         }
 
         /// <summary>

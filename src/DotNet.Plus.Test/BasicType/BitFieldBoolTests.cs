@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using DotNet.Plus.BasicType;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Shouldly;
@@ -84,6 +85,15 @@ namespace DotNet.Plus.Test.BasicType
             BitFieldBoolean<byte> test3 = test2;
             test2.Bitmask.ShouldBe(test3.Bitmask);
             test1.Bitmask.ShouldBe(test2.Bitmask);
+        }
+
+        [TestMethod]
+        public void BitFieldBooleanBufferTest()
+        {
+            BitFieldBoolean<byte>.MakeFromBitmask(0b1000_0000).Decode(new byte[] { 0x80, 0x00 }, 0).ShouldBe(true);
+            BitFieldBoolean<byte>.MakeFromBitmask(0b0000_0001).Decode(new byte[] { 0x00, 0x01 }, 1).ShouldBe(true);
+            BitFieldBoolean<byte>.MakeFromBitmask(0b0000_0000).Decode(new byte[] { 0xFF, 0xFF }, 0).ShouldBe(false);
+            BitFieldBoolean<byte>.MakeFromBitmask(0b0000_0100).Decode(new byte[] { 0x80, 0x04 }, 0).ShouldBe(true);
         }
 
 
