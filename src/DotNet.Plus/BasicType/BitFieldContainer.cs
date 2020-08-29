@@ -1,5 +1,5 @@
-﻿using System;
-using DotNet.Plus.Core;
+﻿using DotNet.Plus.Core;
+using System;
 
 namespace DotNet.Plus.BasicType
 {
@@ -64,6 +64,9 @@ namespace DotNet.Plus.BasicType
         {
             if( bitmask.startBitOffset < 0 )
                 throw new ArgumentOutOfRangeException(nameof(bitmask.startBitOffset), bitmask.startBitOffset, $"Must be greater then or equal to 0");
+
+            if( bitmask.numBits == 0 )
+                throw new ArgumentOutOfRangeException(nameof(bitmask.startBitOffset), bitmask.startBitOffset, $"There must be at least 1 bit set");
 
             var numBits = bitmask.numBits;
             var startBitOffset = bitmask.startBitOffset;

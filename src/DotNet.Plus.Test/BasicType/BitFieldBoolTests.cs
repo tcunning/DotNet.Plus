@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using DotNet.Plus.BasicType;
+﻿using DotNet.Plus.BasicType;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Shouldly;
+using System;
 
 namespace DotNet.Plus.Test.BasicType
 {
@@ -73,6 +72,7 @@ namespace DotNet.Plus.Test.BasicType
         {
             Should.Throw<ArgumentOutOfRangeException>(() => new BitFieldBoolean<byte>(8));
             Should.Throw<ArgumentOutOfRangeException>(() => BitFieldBoolean<byte>.MakeFromBitmask(0b1100_0000));
+            Should.Throw<ArgumentOutOfRangeException>(() => BitFieldBoolean<byte>.MakeFromBitmask(0b0000_0000));
         }
 
         [TestMethod]
@@ -88,14 +88,21 @@ namespace DotNet.Plus.Test.BasicType
         }
 
         [TestMethod]
-        public void BitFieldBooleanBufferTest()
+        public void BitFieldBooleanBufferDecodeTest()
         {
             BitFieldBoolean<byte>.MakeFromBitmask(0b1000_0000).Decode(new byte[] { 0x80, 0x00 }, 0).ShouldBe(true);
             BitFieldBoolean<byte>.MakeFromBitmask(0b0000_0001).Decode(new byte[] { 0x00, 0x01 }, 1).ShouldBe(true);
-            BitFieldBoolean<byte>.MakeFromBitmask(0b0000_0000).Decode(new byte[] { 0xFF, 0xFF }, 0).ShouldBe(false);
-            BitFieldBoolean<byte>.MakeFromBitmask(0b0000_0100).Decode(new byte[] { 0x80, 0x04 }, 0).ShouldBe(true);
+            BitFieldBoolean<byte>.MakeFromBitmask(0b0000_0100).Decode(new byte[] { 0x80, 0x04 }, 0).ShouldBe(false);
+            BitFieldBoolean<byte>.MakeFromBitmask(0b0000_0100).Decode(new byte[] { 0x80, 0x04 }, 1).ShouldBe(true);
         }
 
+        [TestMethod]
+        public void BitFieldBooleanBufferEncodeTest()
+        {
+            BitFieldBoolean<byte>.MakeFromBitmask(0b1000_0000).Encode(true, new byte[] { 0x00, 0x00 }).ShouldBe(new byte[] { 0x80, 0x00 });
+            BitFieldBoolean<byte>.MakeFromBitmask(0b1000_0000).Encode(true, new byte[] { 0x00, 0x00 }, offset: 1).ShouldBe(new byte[] { 0x00, 0x80 });
+            BitFieldBoolean<byte>.MakeFromBitmask(0b0001_0000).Encode(false, new byte[] { 0xFF, 0xFF }).ShouldBe(new byte[] { 0xEF, 0xFF });
+        }
 
     }
 

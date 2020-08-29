@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Net.Http.Headers;
 
 namespace DotNet.Plus.BasicType
 {
@@ -95,7 +93,10 @@ namespace DotNet.Plus.BasicType
         {
             var bitmaskInfo = BitField<bool, TContainer>.ParseBitmask(bitmask);
             if( bitmaskInfo.numBits > 1 )
-                throw new ArgumentOutOfRangeException(nameof(bitmask), bitmask, $"The value can contain only a single bit set");
+                throw new ArgumentOutOfRangeException(nameof(bitmask), bitmask, $"The bitmask can contain only a single bit set");
+
+            if( bitmaskInfo.numBits == 0 )
+                throw new ArgumentOutOfRangeException(nameof(bitmask), bitmask, $"The bitmask must contain a set bit");
 
             // Need to convert from startBitOffset to a bit position.
             var maxContainerBits = IntegerDefinition<TContainer>.Size * Byte.BitsInByte;
@@ -105,12 +106,23 @@ namespace DotNet.Plus.BasicType
         /// <inheritdoc cref="BitField{TContainer}.Decode(TContainer)"/>
         public bool Decode(TContainer container) => _bitField.Decode(container);
 
+        /// <summary>
+        /// Decodes a value that fits within TValue from the given buffer.  The buffer must be big enough
+        /// to fit the entire TContainer
+        /// <code>
+        ///     // Define a value that is 4 bits and will be placed in a byte.
+        ///     // The container is 8 bits and the value is in the 2nd nibble
+        ///     var bitField = new BitField{byte}(0b1000_0000);
+        /// 
+        ///     bitField.Decode(new byte[] { 0x80, 0x00 }, 0);  // Returns true
+        /// </code>
+        /// </summary>
+        /// <param name="buffer">The buffer to read the bit from.  The buffer must be big enough to fit the entire
+        /// TContainer</param>
+        /// <param name="offset">A zero based index from where to start within the given buffer</param>
+        /// <returns>True if the bit is set, otherwise false</returns>
         public bool Decode(IList<byte> buffer, int offset = 0)
         {
-            // todo: need to add in check for an empty bitmask...
-            // todo: Should the TContainer be taken away as it should always be a bit for a bitfield?
-            // todo: if we keep the TContainer do we take into account the endeness?
-
             var byteOffset = _bitField.StartBitOffset / Byte.BitsInByte;
             var bitShift = (_bitField.StartBitOffset % Byte.BitsInByte);
             var byteBitmask = 0b1000_0000 >> bitShift;
@@ -120,7 +132,22 @@ namespace DotNet.Plus.BasicType
         /// <inheritdoc cref="BitField{TValue, TContainer}.Encode(TValue, TContainer)"/>
         public TContainer Encode(bool value, TContainer container) => _bitField.Encode(value, container);
 
-        public void Encode(bool value, IList<byte> buffer, int offset = 0)
+        /// <summary>
+        /// Encodes a value into the given buffer
+        /// <code>
+        ///     // Define a value that is 4 bits and will be placed in a byte.
+        ///     // The container is 16 bits and the value is in the 2nd nibble
+        ///     var bitField = new BitField{byte, UInt16}(0b0000_0000_1111_0000);
+        /// 
+        ///     bitField.Encode(0b1010, 0b0000_0000_0000_0000);   // Returns a value of 0b0000_0000_1010_0000
+        /// </code>
+        /// </summary>
+        /// <param name="value">The value to be sifted and placed into the buffer according to BitField's bitmask</param>
+        /// <param name="buffer">That buffer that will have a bit set, it must be large enough to old the TContainer</param>
+        /// <param name="offset">A zero based index from where to start within the given buffer</param>
+        /// <returns>To allow for chaining it returns the passed in buffer</returns>
+        public TBuffer Encode<TBuffer>(bool value, TBuffer buffer, int offset = 0)
+            where TBuffer : IList<byte>
         {
             var byteOffset = _bitField.StartBitOffset / Byte.BitsInByte;
             var byteBitmask = (byte)(0b1000_0000 >> (_bitField.StartBitOffset % Byte.BitsInByte));
@@ -129,6 +156,8 @@ namespace DotNet.Plus.BasicType
                 buffer[index] |= byteBitmask;
             else
                 buffer[index] &= (byte)~byteBitmask;
+
+            return buffer;
         }
 
         /// <summary>
