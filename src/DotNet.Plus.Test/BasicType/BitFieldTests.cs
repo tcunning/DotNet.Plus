@@ -62,11 +62,11 @@ namespace DotNet.Plus.Test.BasicType
         [TestMethod]
         public void BitFieldTest()
         {
-            (new BitField<byte>(0b0000_0000)).Bitmask.ShouldBe<byte>(0b0000_0000);
             (new BitField<byte>(0b1111_1111)).Bitmask.ShouldBe<byte>(0b1111_1111);
             (new BitField<byte>(0b1000_0000)).Bitmask.ShouldBe<byte>(0b1000_0000);
             (new BitField<byte>(0b0000_0001)).Bitmask.ShouldBe<byte>(0b0000_0001);
 
+            Should.Throw<ArgumentOutOfRangeException>(() => new BitField<byte>(0b0000_0000));
             Should.Throw<ArgumentOutOfRangeException>(() => new BitField<byte>(0b1000_0001));
             Should.Throw<ArgumentOutOfRangeException>(() => new BitField<byte>(0b0110_0010));
             Should.Throw<ArgumentOutOfRangeException>(() => new BitField<byte>(0b0101_1100));

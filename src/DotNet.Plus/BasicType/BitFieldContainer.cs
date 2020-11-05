@@ -1,5 +1,5 @@
-﻿using System;
-using DotNet.Plus.Core;
+﻿using DotNet.Plus.Core;
+using System;
 
 namespace DotNet.Plus.BasicType
 {
@@ -44,7 +44,17 @@ namespace DotNet.Plus.BasicType
         /// TContainer.
         /// </summary>
         public TContainer Bitmask => ConvertUnchecked.ChangeType<TContainer>(_bitmask);
- 
+
+        /// <summary>
+        /// A zero based index counting the number of bites to the left of the set bit within the context of the
+        /// TContainer.
+        /// <code>
+        /// For Example:
+        ///      0b0000_0110 would have a StartBitOffset of 5
+        /// </code>
+        /// </summary>
+        public byte StartBitOffset { get; }
+
         private readonly UInt64 _bitmask;
         private readonly byte _valueBitsToRight;
 
@@ -54,6 +64,9 @@ namespace DotNet.Plus.BasicType
         {
             if( bitmask.startBitOffset < 0 )
                 throw new ArgumentOutOfRangeException(nameof(bitmask.startBitOffset), bitmask.startBitOffset, $"Must be greater then or equal to 0");
+
+            if( bitmask.numBits == 0 )
+                throw new ArgumentOutOfRangeException(nameof(bitmask.startBitOffset), bitmask.startBitOffset, $"There must be at least 1 bit set");
 
             var numBits = bitmask.numBits;
             var startBitOffset = bitmask.startBitOffset;
@@ -78,6 +91,8 @@ namespace DotNet.Plus.BasicType
                 _bitmask >>= startBitOffset;
                 _bitmask >>= ContainerMaxBits - containerUsedBits;
             }
+
+            StartBitOffset = (byte)startBitOffset;
         }
 
         /// <summary>
