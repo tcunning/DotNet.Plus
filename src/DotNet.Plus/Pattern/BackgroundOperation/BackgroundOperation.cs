@@ -12,8 +12,8 @@ namespace DotNet.Plus.Pattern.BackgroundOperation
         private readonly BackgroundOperationFunc? _backgroundOperation;
 
         /// <summary>
-        /// Derived classes may use this constructor, but if they do so they should override BackgroundOperationAsync to provide the background action.  The
-        /// default constructor is not intended for non-derived classes as they would have no way to specify the background action!
+        /// Derived classes may use this constructor, but if they do so they must override BackgroundOperationAsync to provide
+        /// the background action.
         /// </summary>
         protected BackgroundOperation()
         {
@@ -46,8 +46,9 @@ namespace DotNet.Plus.Pattern.BackgroundOperation
         }
 
         /// <summary>
-        /// This is used for derived classes to provide any easy way to provide the BackgroundOperationAsync.  When overridden, the base implementation of this
-        /// method doesn't need to be invoked as _backgroundOperation will be null!
+        /// This is used for derived classes to provide any easy way to provide the BackgroundOperationAsync.  When overridden,
+        /// the base implementation does not need to call this implementation, unless it intends to use the _backgroundOperation
+        /// action to perform the background operation.
         /// </summary>
         /// <param name="cancellationToken"></param>
         protected virtual async Task BackgroundOperationAsync(CancellationToken cancellationToken)
@@ -66,15 +67,16 @@ namespace DotNet.Plus.Pattern.BackgroundOperation
         protected override Task BackgroundOperationAsync(object[]? args, CancellationToken cancellationToken) => BackgroundOperationAsync(cancellationToken);
 
         /// <summary>
-        /// Starts the background action.  If the action  is already running, the task will be marked for restart (unless stop gets called).
-        /// This allows for rapid start/stop sequences where the last one called is the state the background action will end up in.
+        /// Starts the background action.  If the background operation is already running, it will be marked for restart.  Calling
+        /// Stop can/will cancel this restart. This allows for rapid start/stop sequences where the last one called is the state the
+        /// background action will end up in.
         /// 
-        /// STOP WILL ALWAYS STOP THE CURRENT TASK AND ANY *PENDING* RESTARTS OF THE TASK.  Note: this is not a reference counting system.
+        /// STOP WILL ALWAYS STOP THE CURRENT OPERATION AND ANY *PENDING* RESTARTS.  Note: this is not a reference counting system.
         /// If stop is called, the background action will be stopped.
         ///
-        /// If start is called multiple times, only the arguments given to the first start will be used until a stop is called.  So to make sure
-        /// the last given start arguments are used call STOP following by the intended START arguments.  This will guarantee the last given start
-        /// arguments are used. 
+        /// If start is called multiple times, only the arguments given to the first start will be used until a stop is called.  So
+        /// to make sure the last given start arguments are used call STOP following by the intended START arguments.  This will
+        /// guarantee the last given start arguments are used. 
         /// </summary>
         public virtual void Start() => BackgroundOperationStart(args: null);
 
