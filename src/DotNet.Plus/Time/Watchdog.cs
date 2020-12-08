@@ -31,8 +31,8 @@ namespace DotNet.Plus.Time
 
         private TaskCompletionSource<bool>? _triggerTcs = null;  // If requested, this will be completed if watchdog is triggered or disposed
 
-        public Watchdog(TimeSpan petTimeoutMs, bool autoStartOnFirstPet = false) :
-            this(petTimeoutMs, null, autoStartOnFirstPet)
+        public Watchdog(TimeSpan petTimeout, bool autoStartOnFirstPet = false) :
+            this(petTimeout, null, autoStartOnFirstPet)
         {
         }
 
@@ -52,13 +52,11 @@ namespace DotNet.Plus.Time
 
         private async Task WatchdogOperationAsync(CancellationToken cancellationToken)
         {
-            var lastPetTime = _lastPetTime;
-            
             IsTriggered = false;
 
             while( !cancellationToken.IsCancellationRequested && !IsDisposed )
             {
-                var timeTaken = FreeRunningTimer.ElapsedTime - lastPetTime;
+                var timeTaken = FreeRunningTimer.ElapsedTime - _lastPetTime;
                 var sleepTime = (int)PetTimeout.TotalMilliseconds - (int)timeTaken.TotalMilliseconds;
 
                 // if we are configured to have a max time until triggered, check to see if we need to adjust our sleep time to take into
@@ -84,10 +82,8 @@ namespace DotNet.Plus.Time
                     return;
                 }
                 
-                if( IsCanceled ) {
-                    _triggerTcs?.TrySetException(new WatchdogCanceledException());
+                if( IsCanceled ) 
                     return;
-                }
 
                 IsTriggered = true;
                 try { _triggerCallback?.Invoke(); } catch { /* ignored */ }
@@ -127,6 +123,7 @@ namespace DotNet.Plus.Time
                     throw new WatchdogNotStartedException();
 
                 IsCanceled = true;
+                _triggerTcs?.TrySetException(new WatchdogCanceledException());
                 _backgroundOperation.Stop();
             }
         }
@@ -161,6 +158,8 @@ namespace DotNet.Plus.Time
                     //
                     if( _triggerTcs?.Task.IsCompleted ?? false )
                         _triggerTcs = null;
+
+                    return TimeSpan.Zero;
                 }
 
                 // Pet it
@@ -181,16 +180,16 @@ namespace DotNet.Plus.Time
         /// The returned task will be in a Exception state if the Watchdog was disposed w/o being triggered.
         /// </summary>
         /// <returns>A task that will be completed when the watchdog is triggered or disposed.</returns>
-        public Task AsTask()
+        public Task<bool> AsTask()
         {
             lock( _lock )
             {
                 if( _triggerTcs == null ) {
                     if( IsDisposed )
-                        return Task.FromException(new WatchdogDisposedException());
+                        return Task.FromException<bool>(new WatchdogDisposedException());
 
                     if( IsCanceled )
-                        return Task.FromException(new WatchdogCanceledException());
+                        return Task.FromException<bool>(new WatchdogCanceledException());
 
                     if( IsTriggered )
                         return Task.FromResult(true);
@@ -206,10 +205,10 @@ namespace DotNet.Plus.Time
         {
             lock( _lock )
             {
-                if( IsMonitorStarted ) 
+                if( IsMonitorStarted && !IsTriggered )
                     IsCanceled = true;
-                else
-                    _triggerTcs?.TrySetException(new WatchdogDisposedException());
+
+                _triggerTcs?.TrySetException(new WatchdogDisposedException());
 
                 _backgroundOperation.Stop();
             }
