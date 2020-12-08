@@ -53,6 +53,7 @@ namespace DotNet.Plus.Time
         private async Task WatchdogOperationAsync(CancellationToken cancellationToken)
         {
             IsTriggered = false;
+            var firstPetTime = FreeRunningTimer.ElapsedTime;
 
             while( !cancellationToken.IsCancellationRequested && !IsDisposed )
             {
@@ -64,7 +65,7 @@ namespace DotNet.Plus.Time
                 // less then 0 then we don't have to check as we know the watchdog needs to be triggered!
                 //
                 if( PetMaxTimeUntilTriggered > TimeSpan.Zero && sleepTime > 0 ) {
-                    var maxSleepTime = (int)PetMaxTimeUntilTriggered.TotalMilliseconds - (int)timeTaken.TotalMilliseconds;
+                    var maxSleepTime = (int)PetMaxTimeUntilTriggered.TotalMilliseconds - (int) (FreeRunningTimer.ElapsedTime - firstPetTime).TotalMilliseconds;
                     if( maxSleepTime < sleepTime )
                         sleepTime = maxSleepTime;
                 }
@@ -159,6 +160,8 @@ namespace DotNet.Plus.Time
                     if( _triggerTcs?.Task.IsCompleted ?? false )
                         _triggerTcs = null;
 
+                    _backgroundOperation.Stop();
+                    Monitor();
                     return TimeSpan.Zero;
                 }
 
