@@ -18,7 +18,7 @@ namespace DotNet.Plus.BasicType
     ///     var bitField = new BitField{byte}(0b1111_0000);
     ///
     ///     bitField.Encode(0b1010, 0b0000_0000);   // Returns a value of 0b1010_0000
-    ///     bitField.Decode(0b1001_0000);           // Returns a value of 0b0000_1010
+    ///     bitField.Decode(0b1001_0000);           // Returns a value of 0b0000_1001
     /// </code>
     /// </summary>
     /// <typeparam name="TValue">An integer type that will be used to hold the encoded/decoded value.  

@@ -10,7 +10,7 @@ namespace DotNet.Plus.Security
         /// Generate an MD5 Hash from the given string.  The security of the MD5 hash function is severely compromised, but
         /// is included for compatibility with system that still require it.
         /// </summary>
-        /// <param name="fromString"></param>
+        /// <param name="fromString">A string to hash</param>
         /// <returns></returns>
         public static byte[] Md5Hash(this string fromString)
         {

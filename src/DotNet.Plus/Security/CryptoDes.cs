@@ -10,7 +10,7 @@ namespace DotNet.Plus.Security
         /// <summary>
         /// Legacy support for older style DES (Data Encryption Standard) support for simple encryption/decryption. 
         /// </summary>
-        /// <param name="encryptedBase64String">The  base 64 encrypted string to decrypt</param>
+        /// <param name="encryptedBase64String">The base 64 encrypted string to decrypt</param>
         /// <param name="encryptionKey">The DES key, should be exactly 8 bytes</param>
         /// <returns>The decrypted result as a string</returns>
         /// <exception cref="CryptographicException">If there was an error during decryption</exception>
