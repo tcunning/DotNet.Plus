@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DotNet.Plus.Fast\DotNet.Plus.Fast.csproj" />
     <ProjectReference Include="..\DotNet.Plus\DotNet.Plus.csproj" />
   </ItemGroup>
 

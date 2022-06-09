@@ -42,5 +42,20 @@ namespace DotNet.Plus.Math
             return value;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int ValueInt(int value, int min, int max)
+        {
+            if (min > max) 
+                throw new ArgumentOutOfRangeException(nameof(max), $"Max value needs to be larger then min value");
+
+            if (value <= min)
+                return min;
+
+            if (value >= max)
+                return max;
+
+            return value;
+        }
+
     }
 }

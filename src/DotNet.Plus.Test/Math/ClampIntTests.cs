@@ -1,7 +1,7 @@
-﻿using System;
+﻿using DotNet.Plus.Math;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using DotNet.Plus.Math;
 using Shouldly;
+using System;
 
 namespace DotNet.Plus.Test.Math
 {
@@ -50,5 +50,25 @@ namespace DotNet.Plus.Test.Math
             Should.Throw<ArgumentOutOfRangeException>(() => Clamp.Value((int) 10, (int) 100, (int) 1));
         }
 
+        [TestMethod]
+        public void SpeedInRangeTemplateTest()
+        {
+            for( int index = 0; index < 2_000_000; index += 1 )
+                Clamp.Value((int)50, (int)10, (int)100).ShouldBe((int)50);
+        }
+
+        [TestMethod]
+        public void SpeedInRangeIntTest()
+        {
+            for (int index = 0; index < 2_000_000; index += 1)
+                Clamp.ValueInt(50, 10, 100).ShouldBe(50);
+        }
+
+        [TestMethod]
+        public void SpeedInRangeIntFastTest()
+        {
+            for (int index = 0; index < 2_000_000; index += 1)
+                DotNet.Plus.Fast.Clamp.Value(50, 10, 100).ShouldBe(50);
+        }
     }
 }
